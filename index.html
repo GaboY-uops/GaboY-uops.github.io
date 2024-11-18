@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Evaluación de Sistemas de Información</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .container {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .logo {
+            display: block;
+            margin: 20px auto;
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 25px;
+            margin: 10px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        iframe {
+            width: 100%;
+            height: 700px;
+            border: none;
+        }
+
+        footer {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        /* Modo oscuro */
+        body.dark-mode {
+            background-color: #121212;
+            color: #f4f4f4;
+        }
+
+        header.dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+
+        footer.dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+
+        /* Adaptabilidad: Ajustes para pantallas pequeñas y medianas */
+        @media (max-width: 768px) {
+            .menu {
+                width: 200px;
+            }
+
+            .menu-icon {
+                font-size: 25px;
+            }
+
+            header {
+                padding: 0.8rem;
+            }
+
+            .logo {
+                max-width: 400px;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .button {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+
+            .notifications, .calendar, .checklist {
+                max-width: 100%;
+                padding: 10px;
+            }
+        }
+
+        /* Estilos para dispositivos móviles */
+        @media (max-width: 480px) {
+            header {
+                font-size: 18px;
+                padding: 0.6rem;
+            }
+
+            .logo {
+                width: 90%;
+            }
+
+            .container {
+                padding: 0.5rem;
+            }
+
+            .button {
+                padding: 10px 18px;
+                font-size: 12px;
+            }
+
+            .menu {
+                width: 100%;
+                padding: 0;
+            }
+
+            .menu-icon {
+                font-size: 22px;
+            }
+
+            .info-icon {
+                font-size: 18px;
+            }
+
+            .info-tooltip {
+                font-size: 12px;
+            }
+
+            .notifications, .calendar, .checklist {
+                padding: 8px;
+            }
+        }
+
+        /* Estilo para pantallas muy grandes */
+        @media (min-width: 1200px) {
+            .menu {
+                width: 300px;
+            }
+
+            .container {
+                padding: 2.5rem;
+            }
+
+            .logo {
+                max-width: 600px;
+            }
+
+            .button {
+                padding: 16px 28px;
+                font-size: 18px;
+            }
+        }
+
+        /* Botón de modo oscuro */
+        .mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .mode-toggle img {
+            width: 30px;
+            height: 30px;
+            transition: transform 0.3s;
+        }
+
+        /* Menú lateral */
+        .menu-icon {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            z-index: 1000;
+            background: transparent;
+            border: none;
+            color: #333;
+            transition: transform 0.3s;
+        }
+
+        body.dark-mode .menu-icon {
+            color: #ffffff;
+        }
+
+        .menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #5DADE2;
+            color: white;
+            padding-top: 60px;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease, background-color 0.3s;
+            z-index: 999;
+        }
+
+        body.dark-mode .menu {
+            background-color: #333;
+        }
+
+        .menu.open {
+            transform: translateX(0);
+        }
+
+        .menu h2 {
+            color: #fff;
+            font-size: 24px;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            border-bottom: 1px solid #555;
+            text-align: left;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .menu a img {
+            margin-right: 10px;
+            width: 24px;
+            height: 24px;
+        }
+
+        .menu a:hover {
+            background-color: #2980B9;
+            transform: scale(1.05);
+        }
+
+        /* Caja de fecha de edición */
+        .date-box {
+            background-color: #eaf4e1;
+            border: 2px solid #4CAF50;
+            padding: 10px;
+            display: inline-block;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode .date-box {
+            background-color: #333;
+            color: #f4f4f4;
+            border-color: #4CAF50;
+        }
+
+        /* Resumen del manual */
+        .summary {
+            text-align: left;
+            margin: 20px auto;
+            max-width: 800px;
+            font-size: 18px;
+            background-color: #eaf4e1;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #4CAF50;
+            line-height: 1.6;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Estilo para centrar el título del Resumen del Manual Técnico */
+.summary h2 {
+    text-align: center;  /* Centra el texto */
+    margin: 0;  /* Elimina el margen superior */
+    padding: 10px 0;  /* Agrega un poco de espacio arriba y abajo */
+    font-size: 24px;  /* Ajusta el tamaño del título si es necesario */
+}
+
+
+        body.dark-mode .summary {
+            background-color: #333;
+            color: #f4f4f4;
+            border-color: #4CAF50;
+        }
+
+        /* Estilo para centrar el título de Checklist de Cumplimiento */
+.checklist h2 {
+    text-align: center;  /* Centra el texto */
+    margin: 0;  /* Elimina el margen superior */
+    padding: 10px 0;  /* Agrega un poco de espacio arriba y abajo */
+    font-size: 24px;  /* Ajusta el tamaño del título */
+}
+
+/* Estilo para centrar el párrafo de instrucciones */
+.checklist p {
+    text-align: center;  /* Centra el texto */
+    font-size: 18px;  /* Ajusta el tamaño del texto */
+    color: #333;  /* Color del texto */
+    margin: 20px 0;  /* Espacio arriba y abajo */
+}
+
+
+        /* Checklist de fases */
+        .checklist {
+            text-align: left;
+            margin: 20px auto;
+            max-width: 800px;
+            padding: 20px;
+            font-size: 18px;
+            background-color: #fff;
+            border-radius: 10px;
+            border: 2px solid #4CAF50;
+            color: #333;
+            position: relative;
+        }
+
+        body.dark-mode .checklist {
+            background-color: #333;
+            color: #f4f4f4;
+            border-color: #4CAF50;
+        }
+
+        .checklist label {
+            display: block;
+            margin-bottom: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .checklist label:hover {
+            background-color: #d4edda;
+        }
+
+        .verification-message {
+            color: #4CAF50;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        /* Estilos para la barra de progreso */
+        .progress-container {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 10px;
+            margin: 20px 0;
+            height: 20px;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: #4CAF50;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+            transition: width 0.5s ease;
+        }
+
+        /* Calendario */
+        .calendar {
+            margin: 20px auto;
+            max-width: 800px;
+            padding: 20px;
+            background-color: #fff;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            color: #333;
+            transition: background-color 0.3s;
+            position: relative;
+        }
+
+        .calendar h2 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .calendar-description {
+            background-color: #eaf4e1;
+            border: 2px solid #4CAF50;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: #333;
+            border-radius: 5px;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .calendar input[type="date"] {
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .days-result {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        /* Notificaciones */
+        .notifications {
+            margin: 20px auto;
+            max-width: 800px;
+            padding: 20px;
+            background-color: #eaf4e1;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            color: #333;
+            text-align: center;
+        }
+
+        .notifications h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .notifications ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .notifications li {
+            margin: 10px 0;
+        }
+
+        /* Ventana modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+            max-width: 90%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .close {
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input, textarea {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Estilos para modo oscuro en inputs y botones */
+        body.dark-mode input,
+        body.dark-mode textarea,
+        body.dark-mode .button,
+        body.dark-mode .progress-container,
+        body.dark-mode .calendar {
+            background-color: #333;
+            color: #fff;
+            border-color: #444;
+        }
+
+        body.dark-mode input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        /* Icono de información */
+        .info-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        .info-tooltip {
+            display: none;
+            position: absolute;
+            top: 30px;
+            right: 10px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            z-index: 10;
+        }
+
+        .info-icon:hover + .info-tooltip {
+            display: block;
+        }
+        footer {
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 1rem; /* Valor original */
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Ajustes para dispositivos móviles */
+@media (max-width: 768px) {
+    footer {
+        padding: 0.5rem; /* Reduce el espacio del padding */
+        font-size: 12px; /* Ajusta el tamaño de la fuente */
+    }
+}
+
+/* Contenedor del chatbot */
+#chatbot-container {
+    position: relative;
+    width: 100%;
+    height: 700px;  /* Ajusta la altura según sea necesario */
+}
+
+/* Crear un bloque negro que cubra la parte inferior */
+#chatbot-overlay {
+    position: absolute;
+    bottom: 0;  /* Asegura que cubra la parte inferior */
+    left: 0;
+    width: 100%;
+    height: 30px; /* Ajusta la altura según lo que cubra */
+    background-color: black; /* Fondo negro */
+    z-index: 10;
+}
+
+/* Estilo opcional para el icono sobre el bloque negro */
+#chatbot-overlay i {
+    color: white;
+    font-size: 18px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centrado */
+}
+
+/* Aseguramos que el footer se quede en su lugar al final */
+footer {
+    position: relative;
+    z-index: 1; /* Esto asegura que el footer se vea sobre el bloque negro */
+}
+
+/* Ajustes para dispositivos móviles */
+@media (max-width: 768px) {
+    .cover-chatbase {
+        height: 20px; /* Ajustar altura si es necesario */
+    }
+}
+
+/* Descripción de la checklist con contorno verde */
+.checklist p {
+    color: #333; /* Color de texto por defecto */
+    border: 2px solid #4CAF50; /* Contorno verde */
+    padding: 10px; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    background-color: #eaf4e1; /* Fondo claro */
+    transition: background-color 0.3s, color 0.3s; /* Transiciones suaves */
+}
+
+/* Títulos en blanco en modo oscuro */
+body.dark-mode .checklist h2,
+body.dark-mode .calendar h2 {
+    color: #FFFFFF; /* Títulos en blanco */
+}
+
+/* Descripción de la checklist en negro en modo oscuro */
+body.dark-mode .checklist p {
+    color: #000000; /* Descripción en negro */
+}
+
+    /* Animación del botón */
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+/* Contenedor principal para el menú y botón compartir */
+.menu-and-share-container {
+    display: flex; /* Alinea los botones en fila */
+    align-items: center; /* Centra los botones verticalmente */
+    gap: 15px; /* Espacio entre los botones */
+    position: fixed;
+    top: 20px;
+    left: 75px; /* Posiciona el contenedor en la esquina superior izquierda */
+    z-index: 1000;
+}
+
+/* Botón del menú */
+.menu-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+.menu-toggle img {
+    width: 30px;
+    height: 30px;
+}
+
+/* Botón compartir */
+.share-button {
+    display: flex;
+    align-items: center; /* Centra el contenido del botón */
+    gap: 8px; /* Espacio entre el ícono y el texto */
+    background-color: #007BFF; /* Azul */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    height: 40px; /* Tamaño consistente */
+}
+
+.share-button img {
+    width: 20px;
+    height: 20px;
+}
+
+.share-button:hover {
+    background-color: #0056b3; /* Azul más oscuro */
+    transform: translateY(-2px);
+}
+
+/* Botón de modo oscuro */
+.mode-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 20px;
+    right: 20px; /* Mantén el botón de modo oscuro en la esquina derecha */
+    z-index: 1000;
+    width: 40px;
+    height: 40px;
+}
+
+.mode-toggle img {
+    width: 30px;
+    height: 30px;
+}
+
+/* Alertas centradas */
+.alert {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: none; /* Ocultar por defecto */
+}
+
+.alert-success {
+    background-color: #4CAF50; /* Verde */
+    color: white;
+}
+
+.alert-error {
+    background-color: #f44336; /* Rojo */
+    color: white;
+}
+
+
+
+
+
+
+    </style>
+</head>
+<body>
+
+<!-- Aquí va el contenido HTML -->
+
+<script>
+    // Funcionalidad JavaScript
+</script>
+</body>
+</html>
+
+</head>
+<!-- Modal de Sugerencias (Colócalo justo antes de la etiqueta de cierre </body>) -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Formulario de Sugerencias</h2>
+            <span class="close" id="close-modal">&times;</span>
+        </div>
+        <form action="https://formspree.io/f/xjkvvzjz" method="POST">
+            <label for="name">Nombre:</label>
+            <input type="text" id="name" name="name" placeholder="Tu nombre" required>
+
+            <label for="email">Correo electrónico:</label>
+            <input type="email" id="email" name="email" placeholder="Tu correo" required>
+
+            <label for="message">Mensaje (Sugerencias, Quejas, Comentarios o Preguntas):</label>
+            <textarea id="message" name="message" rows="5" placeholder="Escribe tu mensaje aquí..." required></textarea>
+
+            <input type="submit" value="Enviar">
+        </form>
+    </div>
+</div>
+
+<body>
+
+ <!-- Contenedor para el menú y el botón compartir -->
+    <div class="menu-and-share-container">
+    <!-- Menu toggle button -->
+    <button class="menu-icon" id="menuIcon">&#9776;</button>
+
+    <!-- Menu -->
+    <nav class="menu" id="menu">
+        <h2>Menú</h2>
+        <a href="evaluacion.html"><img src="https://img.icons8.com/material-rounded/24/ffffff/checked.png" alt="Iniciar Evaluación">Iniciar Evaluación de Usabilidad</a>
+        <a href="informacion.html"><img src="https://img.icons8.com/material-outlined/24/ffffff/info.png" alt="Consultar Información">Consultar Información Adicional</a>
+        <a href="preguntas-frecuentes.html"><img src="https://img.icons8.com/ios-glyphs/24/ffffff/question-mark.png" alt="Preguntas Frecuentes">Preguntas Frecuentes</a>
+        <a href="descargas.html"><img src="https://img.icons8.com/material-rounded/24/ffffff/download.png" alt="Descargar Manual">Descargar Documentos</a>
+        <a href="foro.html"><img src="https://img.icons8.com/material-rounded/24/ffffff/speech.png" alt="Foro de Discusión">Ir al Foro de Discusión</a>
+        <a href="#" id="open-modal"><img src="https://img.icons8.com/material-rounded/24/ffffff/comments.png" alt="Sugerencias">Dejar Sugerencias, Quejas o Comentarios</a>
+        <a href="acerca.html"><img src="https://img.icons8.com/material-rounded/24/ffffff/about.png" alt="Acerca de">Acerca de</a>
+    </nav>
+
+
+    
+        <!-- Botón compartir -->
+        <button class="share-button" id="shareButton" title="Compartir página">
+            <img src="https://img.icons8.com/ios-glyphs/30/ffffff/attach.png" alt="Compartir">
+            Compartir
+        </button>
+    </div>
+    
+    <!-- Botón de modo oscuro -->
+    <div class="mode-toggle" id="modeToggle" title="Modo Oscuro">
+        <img src="https://img.icons8.com/ios-filled/50/000000/sun.png" id="modeIcon" alt="Modo Claro">
+    </div>
+    
+    <!-- Contenedor de alertas -->
+    <div id="alertBox" class="alert"></div>
+    
+    <header>
+        <h1>Evaluación de Sistemas de Información Universitarios</h1>
+    </header>
+
+    <div class="container">
+        <div class="date-box">
+            <p>Última fecha de edición: <strong>04 de noviembre de 2024</strong></p>
+        </div>
+
+        <img src="logo.png" alt="Logo del Proyecto" class="logo">
+
+        <div class="summary">
+            <h2>Resumen del Manual Técnico</h2>
+            <p>Este manual técnico está diseñado para guiar a los desarrolladores en la evaluación y mejora de la usabilidad, calidad y eficiencia de los sistemas de información implementados en las universidades del Estado de Hidalgo. El objetivo principal es proporcionar un marco metodológico claro y bien estructurado que permita identificar áreas de mejora, optimizando la experiencia de los usuarios y garantizando que los sistemas sean más intuitivos y accesibles.</p>
+            <p>El manual ofrece una serie de pasos detallados para llevar a cabo evaluaciones precisas y recopilar retroalimentación de los usuarios mediante encuestas y análisis de datos. Además, se presentan recomendaciones para mejorar tanto la interfaz como la funcionalidad de los sistemas, priorizando la experiencia del usuario.</p>
+            <p>En esta página también encontrarás un <strong><u><a href="#chatbot">chatbot de ayuda</a></u></strong> que te asistirá en la implementación del manual en los sistemas de información de las universidades. El chatbot está diseñado para responder preguntas comunes, ofrecer recomendaciones, y guiarte en el proceso de evaluación, facilitando el uso del manual para lograr mejores resultados.</p>
+        </div>        
+        <div class="notifications">
+            <h3>Avisos:</h3>
+            <div style="position: relative;">
+                <span class="info-icon" data-tooltip="Aquí se muestran los avisos importantes relacionados con la página.">&#10068;</span>
+                <div class="info-tooltip">Aquí se muestran los avisos importantes relacionados con la página.</div>
+            </div>
+            <ul>
+                <li><strong>Nuevo aviso:</strong> La página será actualizada el próximo lunes 10 de noviembre.</li>
+        <li><strong>Nuevo aviso:</strong> La encuesta de satisfacción está abierta hasta el 15 de noviembre.</li>
+        <li><strong>Nuevo aviso:</strong> Se han corregido errores de navegación en el menú principal.</li>
+            </ul>
+        </div>        
+        
+
+        <div class="notifications">
+            <h3>Actualizaciones:</h3>
+            <div style="position: relative;">
+                <span class="info-icon" data-tooltip="Aquí se detallan las actualizaciones recientes realizadas en la página.">&#10068;</span>
+                <div class="info-tooltip">Aquí se detallan las actualizaciones recientes realizadas en la página.</div>
+            </div>
+            <ul>
+                <li><strong>Actualización:</strong> Se ha agregado una nueva sección en el manual sobre accesibilidad.</li>
+                <li><strong>Actualización:</strong> Mejoras implementadas en la interfaz para una navegación más intuitiva.</li>
+                <li><strong>Actualización:</strong> Se añadieron nuevos recursos educativos en la página principal.</li>
+            </ul>
+        </div>
+
+       <!-- Checklist de fases -->
+<div class="container">
+    <div class="checklist">
+        <h2>Checklist de Cumplimiento</h2>
+        <p>Antes de marcar las casillas de verificación, asegúrate de haber cumplido la realización de cada una de las fases adecuadamente, ya que es fundamental para poder aplicar el marco metodológico correctamente.</p>
+
+        <!-- Fases de la checklist -->
+        <label>
+            <input type="checkbox" class="phase-checkbox" id="fase1"> Fase 1: Definición de los Objetivos de Evaluación
+            <span class="verification-message">En esta fase se deben definir los objetivos claros y específicos de la evaluación del sistema, alineados con las necesidades de los usuarios y los resultados esperados.</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="phase-checkbox" id="fase2" disabled> Fase 2: Selección de Métricas y Herramientas de Evaluación
+            <span class="verification-message">Selecciona las métricas y herramientas adecuadas para medir la usabilidad, calidad y eficiencia del sistema, asegurando que sean apropiadas para los objetivos definidos.</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="phase-checkbox" id="fase3" disabled> Fase 3: Planificación de la Evaluación y Recolección de Datos
+            <span class="verification-message">Planifica detalladamente la evaluación, definiendo las actividades, el cronograma y la forma en que se recolectarán los datos necesarios para realizar una evaluación adecuada.</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="phase-checkbox" id="fase4" disabled> Fase 4: Análisis de Resultados y Propuestas de Mejora
+            <span class="verification-message">Analiza los datos recolectados durante las pruebas de evaluación y elabora propuestas de mejora para optimizar la usabilidad, calidad y eficiencia del sistema.</span>
+        </label>
+
+        <label>
+            <input type="checkbox" class="phase-checkbox" id="fase5" disabled> Fase 5: Implementación de Mejoras y Validación de Resultados
+            <span class="verification-message">Implementa las mejoras propuestas y valida su efectividad mediante una evaluación posterior para asegurar que el sistema cumpla con los objetivos de calidad y usabilidad establecidos.</span>
+        </label>
+
+        <!-- Barra de progreso -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar">0%</div>
+        </div>
+        
+        <!-- Icono de información con tooltip -->
+        <div class="info-icon-container">
+            <span class="info-icon" data-tooltip="Aquí puedes marcar las fases que has completado.">&#10068;</span>
+            <div class="info-tooltip">Aquí puedes marcar las fases que has completado.</div>
+        </div>
+    </div>
+</div>
+            
+
+        <!-- Calendario de implementación -->
+        <div class="calendar">
+            <div class="calendar-description">
+                Este calendario te ayudará a planificar las fases de implementación del manual. Selecciona las fechas de inicio y finalización de cada fase para calcular la duración.
+            </div>
+            <h2>Calendarios de Implementación de Fases</h2>
+            <div style="position: relative;">
+                <span class="info-icon" data-tooltip="Selecciona las fechas de inicio y finalización para cada fase y calcula la duración.">&#10068;</span>
+                <div class="info-tooltip">Selecciona las fechas de inicio y finalización para cada fase y calcula la duración.</div>
+            </div>
+            <h3>Fase 1</h3>
+            <label for="start-date1">Fecha de inicio:</label>
+            <input type="date" id="start-date1">
+            <label for="end-date1">Fecha de finalización:</label>
+            <input type="date" id="end-date1">
+            <button class="button" id="calculate-days1">Calcular días</button>
+            <p id="days-result1" class="days-result"></p>
+
+            <h3>Fase 2</h3>
+            <label for="start-date2">Fecha de inicio:</label>
+            <input type="date" id="start-date2">
+            <label for="end-date2">Fecha de finalización:</label>
+            <input type="date" id="end-date2">
+            <button class="button" id="calculate-days2">Calcular días</button>
+            <p id="days-result2" class="days-result"></p>
+
+            <h3>Fase 3</h3>
+            <label for="start-date3">Fecha de inicio:</label>
+            <input type="date" id="start-date3">
+            <label for="end-date3">Fecha de finalización:</label>
+            <input type="date" id="end-date3">
+            <button class="button" id="calculate-days3">Calcular días</button>
+            <p id="days-result3" class="days-result"></p>
+
+            <h3>Fase 4</h3>
+            <label for="start-date4">Fecha de inicio:</label>
+            <input type="date" id="start-date4">
+            <label for="end-date4">Fecha de finalización:</label>
+            <input type="date" id="end-date4">
+            <button class="button" id="calculate-days4">Calcular días</button>
+            <p id="days-result4" class="days-result"></p>
+
+            <h3>Fase 5</h3>
+            <label for="start-date5">Fecha de inicio:</label>
+            <input type="date" id="start-date5">
+            <label for="end-date5">Fecha de finalización:</label>
+            <input type="date" id="end-date5">
+            <button class="button" id="calculate-days5">Calcular días</button>
+            <p id="days-result5" class="days-result"></p>
+
+        </div>
+
+        
+        <!-- Contenedor del chatbot -->
+<div id="chatbot-container">
+    <iframe id="chatbot" src="https://www.chatbase.co/chatbot-iframe/ER9BDOiBNOnnS94a7uUCQ" width="100%" style="height: 100%; min-height: 700px; overflow: hidden;" frameborder="0"></iframe>
+    
+    <!-- Bloque negro que cubre la parte inferior -->
+    <div id="chatbot-overlay">
+        <!-- Puedes incluir un icono si lo deseas -->
+        <i class="fas fa-times"></i> <!-- Esto es solo un ejemplo de un icono -->
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2024 Proyecto de Desarrollo de Proyectos Computacionales. Todos los derechos reservados.</p>
+</footer>
+
+<!-- Bloque negro que cubre el texto de Chatbase -->
+<div class="cover-chatbase"></div>
+       
+    <!-- Funcionalidad JavaScript -->
+    <script>
+        // Funcionalidad para abrir el modal
+        const openModal = document.getElementById('open-modal');
+        const modal = document.getElementById('modal');
+        const closeModal = document.getElementById('close-modal');
+        
+        // Abre el modal al hacer clic en el botón
+        openModal.addEventListener('click', () => {
+            modal.style.display = 'flex';
+        });
+        
+        // Cierra el modal al hacer clic en la X
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+        
+        // Cierra el modal si se hace clic fuera de la ventana del modal
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+        
+       // Funcionalidad del botón de modo oscuro
+const modeToggle = document.getElementById('modeToggle');
+const modeIcon = document.getElementById('modeIcon');
+const body = document.body;
+
+modeToggle.addEventListener('click', () => {
+    body.classList.toggle('dark-mode');
+    if (body.classList.contains('dark-mode')) {
+        modeIcon.src = 'https://img.icons8.com/ios-filled/50/ffffff/moon-symbol.png';
+    } else {
+        modeIcon.src = 'https://img.icons8.com/ios-filled/50/000000/sun.png';
+    }
+});
+
+// Función para mostrar alertas
+function showAlert(message, type) {
+    const alertBox = document.getElementById('alertBox');
+    alertBox.textContent = message;
+
+    // Aplicar la clase según el tipo
+    alertBox.className = `alert alert-${type}`;
+    alertBox.style.display = 'block';
+
+    // Ocultar la alerta después de 3 segundos
+    setTimeout(() => {
+        alertBox.style.display = 'none';
+    }, 3000);
+}
+
+// Funcionalidad del botón "Compartir"
+const shareButton = document.getElementById('shareButton');
+shareButton.addEventListener('click', (event) => {
+    event.stopPropagation(); // Evita que el clic se propague al contenedor padre
+    const currentUrl = window.location.href;
+
+    navigator.clipboard.writeText(currentUrl)
+        .then(() => {
+            showAlert('¡Enlace copiado al portapapeles!', 'success'); // Éxito
+        })
+        .catch(() => {
+            showAlert('Error al copiar el enlace. Inténtalo de nuevo.', 'error'); // Error
+        });
+});
+
+
+        // Funcionalidad para la checklist y barra de progreso
+        const checkboxes = document.querySelectorAll('.phase-checkbox');
+        const progressBar = document.getElementById('progress-bar');
+    
+        checkboxes.forEach((checkbox, index) => {
+            checkbox.addEventListener('change', function() {
+                const message = checkbox.nextElementSibling;
+                if (checkbox.checked) {
+                    message.style.display = 'inline';
+                    if (index + 1 < checkboxes.length) {
+                        checkboxes[index + 1].disabled = false;
+                    }
+                } else {
+                    message.style.display = 'none';
+                    for (let i = index + 1; i < checkboxes.length; i++) {
+                        checkboxes[i].checked = false;
+                        checkboxes[i].disabled = true;
+                        checkboxes[i].nextElementSibling.style.display = 'none';
+                    }
+                }
+                updateProgress(); // Actualizar la barra de progreso al cambiar los checkboxes
+            });
+        });
+    
+        function updateProgress() {
+            const totalCheckboxes = checkboxes.length;
+            const checkedCheckboxes = document.querySelectorAll('.phase-checkbox:checked').length;
+            const progressPercentage = (checkedCheckboxes / totalCheckboxes) * 100;
+            progressBar.style.width = progressPercentage + '%';
+            progressBar.innerText = Math.round(progressPercentage) + '%';
+        }
+    
+        // Funcionalidad para el menú
+        const menuIcon = document.getElementById('menuIcon');
+        const menu = document.getElementById('menu');
+    
+        menuIcon.addEventListener('click', () => {
+            menu.classList.toggle('open');
+        });
+    
+        // Cierra el menú al hacer clic fuera de él
+        document.addEventListener('click', (event) => {
+            if (!menu.contains(event.target) && event.target !== menuIcon) {
+                menu.classList.remove('open');
+            }
+        });
+    
+        // Funcionalidad para calcular días en el calendario
+        function calculateDays(startDateId, endDateId, resultId) {
+            const startDate = new Date(document.getElementById(startDateId).value);
+            const endDate = new Date(document.getElementById(endDateId).value);
+            const daysResult = document.getElementById(resultId);
+    
+            if (startDate && endDate && startDate <= endDate) {
+                const timeDiff = endDate.getTime() - startDate.getTime();
+                const daysDiff = timeDiff / (1000 * 3600 * 24);
+                daysResult.textContent = `Duración de la fase: ${daysDiff} días`;
+            } else {
+                daysResult.textContent = 'Por favor selecciona fechas válidas.';
+            }
+        }
+    
+        document.getElementById('calculate-days1').addEventListener('click', () => calculateDays('start-date1', 'end-date1', 'days-result1'));
+        document.getElementById('calculate-days2').addEventListener('click', () => calculateDays('start-date2', 'end-date2', 'days-result2'));
+        document.getElementById('calculate-days3').addEventListener('click', () => calculateDays('start-date3', 'end-date3', 'days-result3'));
+        document.getElementById('calculate-days4').addEventListener('click', () => calculateDays('start-date4', 'end-date4', 'days-result4'));
+        document.getElementById('calculate-days5').addEventListener('click', () => calculateDays('start-date5', 'end-date5', 'days-result5'));
+        document.getElementById('calculate-days6').addEventListener('click', () => calculateDays('start-date6', 'end-date6', 'days-result6'));
+    </script>
+    
+
+</body>
+</html>

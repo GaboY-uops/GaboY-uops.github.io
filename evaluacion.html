@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Evaluación de Usabilidad</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background-color: #f4f4f4;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .dark-mode {
+            background-color: #333;
+            color: #f4f4f4;
+        }
+
+        .dark-mode .summary,
+        .dark-mode .instruction,
+        .dark-mode .question-container,
+        .dark-mode label {
+            background-color: #444;
+            color: #f4f4f4;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .summary, .instruction {
+            background-color: #eaf4e1;
+            border: 2px solid #4CAF50;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .question-container {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .info-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            color: #007BFF;
+            font-weight: bold;
+        }
+
+        .tooltip {
+            visibility: hidden;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 5px;
+            position: absolute;
+            top: -5px;
+            right: 25px;
+            z-index: 1;
+            font-size: 12px;
+            width: 150px;
+        }
+
+        .info-icon:hover .tooltip {
+            visibility: visible;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        #results {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e0f7fa;
+            border: 1px solid #0097a7;
+            display: none;
+        }
+
+        #retry-button {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .error-message {
+            color: #fff;
+            background-color: #ff4d4d;
+            padding: 1rem;
+            border-radius: 5px;
+            text-align: center;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            display: none;
+        }
+
+        footer {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: auto;
+        }
+
+        h1 {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem;
+            margin-top: 0;
+            text-align: center;
+        }
+
+        /* Botón de "Regresar" */
+        #back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: red;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            z-index: 1000;
+        }
+
+        /* Icono de modo claro/oscuro */
+        #dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            font-size: 24px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Formulario de Evaluación de Usabilidad</h1>
+    </header>
+
+    <a href="index.html" id="back-button">Regresar</a>
+    <div id="dark-mode-toggle" onclick="toggleDarkMode()">🌞</div>
+
+    <div class="summary">
+        <p>Esta evaluación se centra en la usabilidad y calidad del sistema de información. Por favor, especifica brevemente el tipo de sistema de información que tienes, de qué consta, y en qué aspectos consideras que necesita mejorar.</p>
+    </div>
+
+    <div id="error-message" class="error-message"></div>
+
+    <label for="system-description">Descripción del sistema:</label>
+    <textarea id="system-description" rows="3" style="width: 100%;" placeholder="Describe el sistema de información..."></textarea>
+    <button class="button" onclick="generateQuestions()">Generar Preguntas</button>
+
+    <form id="evaluation-form" style="display: none;">
+        <div class="instruction">
+            <p>Por favor, contesta honestamente cada pregunta para verificar la usabilidad de tu sistema de información.</p>
+        </div>
+        <div id="questions-container"></div>
+        <button type="button" class="button" onclick="calculateResults()">Finalizar Evaluación</button>
+    </form>
+
+    <div id="results"></div>
+    <button id="retry-button" class="button" onclick="retryEvaluation()">Repetir Evaluación</button>
+
+    <footer>
+        <p>&copy; 2024 Proyecto de Desarrollo de proyectos computacionales. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        // Función de Modo Claro/Oscuro con icono de sol y luna
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const toggleIcon = document.getElementById('dark-mode-toggle');
+            toggleIcon.textContent = document.body.classList.contains('dark-mode') ? '🌙' : '🌞';
+        }
+
+        const questionsDatabase = {
+            general: [
+                { question: "¿El sistema es fácil de navegar?", tooltip: "Evaluamos la facilidad de movimiento en el sistema." },
+                { question: "¿Los tiempos de carga son aceptables?", tooltip: "Verificamos la eficiencia del sistema." },
+                { question: "¿La información está bien organizada?", tooltip: "Revisamos la disposición y claridad de la información." },
+                { question: "¿La interfaz es visualmente agradable?", tooltip: "Medimos la estética y comodidad visual del sistema." },
+                { question: "¿El sistema es accesible en diferentes dispositivos?", tooltip: "Comprobamos si el sistema se adapta a varios dispositivos." },
+                { question: "¿La terminología es consistente y clara?", tooltip: "Verificamos que los términos sean comprensibles y coherentes." },
+                { question: "¿El diseño facilita el flujo de tareas?", tooltip: "Revisamos si el diseño facilita la realización de tareas." },
+                { question: "¿Los errores son fáciles de identificar y corregir?", tooltip: "Evaluamos la facilidad de detección y corrección de errores." },
+                { question: "¿El sistema proporciona ayuda contextual?", tooltip: "Revisamos si existe ayuda disponible en el sistema." },
+                { question: "¿El sistema es intuitivo?", tooltip: "Verificamos la facilidad de uso sin necesidad de aprendizaje." },
+                { question: "¿El sistema se comporta como el usuario espera?", tooltip: "Evaluamos la predictibilidad de las acciones del sistema." },
+                { question: "¿La disposición visual es clara y sin desorden?", tooltip: "Revisamos la organización visual del sistema." },
+                { question: "¿El sistema muestra mensajes de confirmación cuando es necesario?", tooltip: "Verificamos la existencia de mensajes de confirmación en tareas importantes." },
+                { question: "¿El sistema ofrece atajos para usuarios avanzados?", tooltip: "Evaluamos si existen funciones para facilitar el uso a usuarios frecuentes." },
+                { question: "¿El contenido se adapta a la necesidad del usuario?", tooltip: "Comprobamos si el contenido es relevante para los usuarios." },
+                { question: "¿El diseño visual ayuda a la comprensión de la información?", tooltip: "Evaluamos si el diseño contribuye a la claridad informativa." },
+                { question: "¿Las notificaciones de error son claras y útiles?", tooltip: "Revisamos la calidad de los mensajes de error." },
+                { question: "¿Es fácil aprender a usar el sistema?", tooltip: "Verificamos si los usuarios pueden aprender rápidamente." },
+                { question: "¿El sistema responde rápidamente a las acciones?", tooltip: "Medimos la velocidad de respuesta a interacciones del usuario." },
+                { question: "¿Los elementos clave se encuentran fácilmente en la interfaz?", tooltip: "Comprobamos si los elementos clave son visibles y accesibles." }
+            ],
+            buttons: [
+                { question: "¿Los botones están bien ubicados y son visibles?", tooltip: "Evaluamos la ubicación y visibilidad de los botones." },
+                { question: "¿Es fácil identificar los botones necesarios?", tooltip: "Verificamos la identificación clara de los botones principales." },
+                { question: "¿Los botones son accesibles y funcionan correctamente?", tooltip: "Comprobamos la funcionalidad de los botones." },
+                { question: "¿Los botones se destacan visualmente en la interfaz?", tooltip: "Revisamos la apariencia destacada de los botones." },
+                { question: "¿Los botones tienen un tamaño adecuado?", tooltip: "Evaluamos el tamaño y la facilidad de interacción." },
+                { question: "¿Los botones están etiquetados claramente?", tooltip: "Comprobamos la claridad de las etiquetas en los botones." },
+                { question: "¿Los colores de los botones ayudan a diferenciarlos?", tooltip: "Revisamos el uso de color en la distinción de funciones." },
+                { question: "¿Los botones reflejan las acciones que ejecutan?", tooltip: "Evaluamos si el propósito del botón es evidente." },
+                { question: "¿Los botones responden rápidamente al clic?", tooltip: "Verificamos la respuesta del sistema al presionar botones." },
+                { question: "¿Los botones se ajustan bien a diferentes dispositivos?", tooltip: "Comprobamos la adaptabilidad de los botones en móviles y otros dispositivos." },
+                { question: "¿Los botones son fáciles de presionar?", tooltip: "Evaluamos la facilidad de interacción física con los botones." },
+                { question: "¿La ubicación de los botones es intuitiva?", tooltip: "Verificamos si los botones están donde el usuario espera encontrarlos." },
+                { question: "¿El sistema ofrece botones de ayuda o asistencia?", tooltip: "Comprobamos la existencia de botones de ayuda." },
+                { question: "¿El sistema ofrece botones para cancelar o deshacer acciones?", tooltip: "Evaluamos la presencia de opciones para corregir errores." },
+                { question: "¿Los botones son consistentes en su apariencia y función?", tooltip: "Revisamos la consistencia visual y funcional de los botones." },
+                { question: "¿Es fácil saber cuándo un botón está deshabilitado?", tooltip: "Verificamos si los botones deshabilitados son reconocibles." },
+                { question: "¿Los botones importantes se destacan visualmente?", tooltip: "Evaluamos si los botones esenciales se ven claramente." },
+                { question: "¿La función de los botones es intuitiva para el usuario?", tooltip: "Comprobamos si el usuario entiende fácilmente cada función." },
+                { question: "¿Los botones están colocados en lugares accesibles?", tooltip: "Revisamos la accesibilidad y ergonomía de los botones." },
+                { question: "¿Los botones tienen una apariencia coherente en el sistema?", tooltip: "Verificamos que el diseño de los botones sea consistente en todas las páginas." }
+            ],
+            usabilidad: [
+                { question: "¿Es fácil aprender a usar el sistema?", tooltip: "Verificamos si los usuarios pueden aprender rápidamente." },
+                { question: "¿El sistema es intuitivo?", tooltip: "Verificamos la facilidad de uso sin necesidad de aprendizaje." },
+                { question: "¿Los errores son fáciles de identificar y corregir?", tooltip: "Evaluamos la facilidad de detección y corrección de errores." },
+                { question: "¿La interfaz es visualmente agradable?", tooltip: "Medimos la estética y comodidad visual del sistema." },
+                { question: "¿El sistema proporciona ayuda contextual?", tooltip: "Revisamos si existe ayuda disponible en el sistema." },
+                { question: "¿La terminología es consistente y clara?", tooltip: "Verificamos que los términos sean comprensibles y coherentes." },
+                { question: "¿La disposición visual es clara y sin desorden?", tooltip: "Revisamos la organización visual del sistema." },
+                { question: "¿El sistema se comporta como el usuario espera?", tooltip: "Evaluamos la predictibilidad de las acciones del sistema." },
+                { question: "¿La interacción es fluida?", tooltip: "Evaluamos la respuesta rápida y efectiva a la interacción del usuario." },
+                { question: "¿La interfaz se adapta bien a diferentes dispositivos?", tooltip: "Comprobamos si la interfaz es accesible desde móviles y computadoras." },
+                { question: "¿Los elementos están organizados lógicamente?", tooltip: "Verificamos que los elementos sean fáciles de encontrar." },
+                { question: "¿El diseño facilita el flujo de tareas?", tooltip: "Revisamos si el diseño facilita la realización de tareas." },
+                { question: "¿El sistema ofrece atajos para usuarios avanzados?", tooltip: "Evaluamos si existen funciones para usuarios frecuentes." },
+                { question: "¿La interfaz es atractiva visualmente?", tooltip: "Evaluamos si la estética es agradable y profesional." },
+                { question: "¿Las notificaciones de error son claras y útiles?", tooltip: "Revisamos la claridad y utilidad de los mensajes de error." },
+                { question: "¿El sistema permite una navegación rápida?", tooltip: "Evaluamos la facilidad de navegación." },
+                { question: "¿El contenido es fácil de leer?", tooltip: "Verificamos que el contenido sea comprensible y bien estructurado." },
+                { question: "¿La retroalimentación es clara y en tiempo real?", tooltip: "Evaluamos si el sistema responde adecuadamente." },
+                { question: "¿Los cambios son confirmados antes de realizarse?", tooltip: "Revisamos si el usuario recibe confirmaciones para cambios importantes." },
+                { question: "¿El sistema se ajusta a diferentes niveles de habilidad?", tooltip: "Verificamos que el sistema sea accesible para usuarios con diferentes niveles de habilidad." }
+            ],
+            navegabilidad: [
+                { question: "¿El sistema es fácil de navegar?", tooltip: "Evaluamos la facilidad de movimiento en el sistema." },
+                { question: "¿La interfaz ayuda a encontrar información rápidamente?", tooltip: "Verificamos si la navegación es eficiente." },
+                { question: "¿Los menús son fáciles de entender?", tooltip: "Evaluamos la claridad de los menús del sistema." },
+                { question: "¿Los elementos clave son fácilmente accesibles?", tooltip: "Comprobamos si los elementos clave son visibles y accesibles." },
+                { question: "¿La estructura del menú es clara y lógica?", tooltip: "Evaluamos la disposición del menú y su facilidad de uso." },
+                { question: "¿Se puede acceder a funciones clave con pocos clics?", tooltip: "Verificamos la accesibilidad rápida a funciones importantes." },
+                { question: "¿El sistema permite retroceder fácilmente?", tooltip: "Evaluamos si el sistema permite volver a pasos anteriores." },
+                { question: "¿Los enlaces son claros y útiles?", tooltip: "Verificamos la claridad y utilidad de los enlaces." },
+                { question: "¿La navegación es consistente en todo el sistema?", tooltip: "Evaluamos la consistencia de la navegación." },
+                { question: "¿El sistema incluye un buscador funcional?", tooltip: "Comprobamos la existencia y utilidad de una barra de búsqueda." },
+                { question: "¿El sistema permite moverse entre páginas sin problemas?", tooltip: "Evaluamos la fluidez de la navegación entre páginas." },
+                { question: "¿Los botones de navegación están bien ubicados?", tooltip: "Revisamos la ubicación y accesibilidad de botones de navegación." },
+                { question: "¿El sistema permite al usuario conocer su ubicación actual?", tooltip: "Evaluamos si el sistema indica la ubicación del usuario." },
+                { question: "¿Los elementos de navegación son accesibles en dispositivos móviles?", tooltip: "Comprobamos la accesibilidad de los elementos de navegación en móviles." },
+                { question: "¿El sistema permite guardar el progreso de la navegación?", tooltip: "Verificamos si el sistema guarda el estado de navegación del usuario." },
+                { question: "¿La interfaz permite saltar entre secciones?", tooltip: "Evaluamos si la interfaz facilita el acceso a secciones específicas." },
+                { question: "¿Los íconos de navegación son claros y descriptivos?", tooltip: "Revisamos la claridad y función de los íconos de navegación." },
+                { question: "¿Los títulos ayudan a navegar correctamente?", tooltip: "Verificamos si los títulos orientan al usuario en su navegación." },
+                { question: "¿El sistema mantiene la navegación simple y directa?", tooltip: "Evaluamos la simplicidad y claridad de la navegación." },
+                { question: "¿El sistema permite volver al inicio fácilmente?", tooltip: "Comprobamos si es fácil regresar a la página principal." }
+            ],
+            calidad: [
+                { question: "¿El sistema se comporta de manera confiable?", tooltip: "Evaluamos la estabilidad del sistema." },
+                { question: "¿El sistema es eficiente en el uso de recursos?", tooltip: "Medimos el uso de recursos y la eficiencia del sistema." },
+                { question: "¿La calidad visual es consistente?", tooltip: "Revisamos la consistencia visual en toda la interfaz." },
+                { question: "¿La terminología es coherente y precisa?", tooltip: "Verificamos la precisión de términos y descripciones." },
+                { question: "¿El sistema es compatible con dispositivos móviles?", tooltip: "Evaluamos si el sistema funciona en dispositivos móviles." },
+                { question: "¿La interfaz es estable en diferentes navegadores?", tooltip: "Revisamos si la interfaz funciona bien en todos los navegadores." },
+                { question: "¿Los elementos se cargan rápidamente?", tooltip: "Medimos los tiempos de carga de la interfaz." },
+                { question: "¿El sistema cumple con los estándares de accesibilidad?", tooltip: "Evaluamos el cumplimiento de normas de accesibilidad." },
+                { question: "¿El sistema maneja los errores adecuadamente?", tooltip: "Verificamos cómo se gestionan los errores en el sistema." },
+                { question: "¿La interfaz es clara y sin elementos confusos?", tooltip: "Evaluamos la claridad y simplicidad visual de la interfaz." },
+                { question: "¿Los cambios en el sistema se realizan sin problemas?", tooltip: "Comprobamos la estabilidad durante las actualizaciones." },
+                { question: "¿El sistema se ajusta a las expectativas del usuario?", tooltip: "Evaluamos si el sistema cumple las expectativas de calidad del usuario." },
+                { question: "¿Las funciones esenciales siempre están disponibles?", tooltip: "Verificamos la disponibilidad de funciones esenciales." },
+                { question: "¿El sistema proporciona retroalimentación útil?", tooltip: "Revisamos la calidad de la retroalimentación en el sistema." },
+                { question: "¿La interfaz es atractiva y profesional?", tooltip: "Evaluamos la apariencia visual de la interfaz." },
+                { question: "¿El sistema se recupera rápido después de un error?", tooltip: "Medimos la capacidad de recuperación ante errores." },
+                { question: "¿La calidad gráfica es adecuada?", tooltip: "Verificamos la calidad gráfica y visual." },
+                { question: "¿La interfaz es consistente en todas sus partes?", tooltip: "Revisamos la coherencia visual en toda la interfaz." },
+                { question: "¿El sistema es adecuado para tareas específicas?", tooltip: "Evaluamos si el sistema cumple con los objetivos específicos." },
+                { question: "¿La seguridad del sistema es adecuada?", tooltip: "Verificamos la protección de datos y la seguridad en el sistema." }
+            ]
+        };
+
+        function showErrorMessage(message) {
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            setTimeout(() => { errorMessage.style.display = 'none'; }, 3000);
+        }
+
+        function isDescriptionValid(description) {
+            const minWords = 5;
+            const offensiveWords = ["palabra1", "palabra2", "palabra3"];
+            const wordCount = description.trim().split(/\s+/).length;
+
+            if (wordCount < minWords) {
+                showErrorMessage("La descripción es demasiado corta. Por favor, proporciona más detalles.");
+                return false;
+            }
+
+            for (let word of offensiveWords) {
+                if (description.toLowerCase().includes(word)) {
+                    showErrorMessage("La descripción contiene lenguaje inapropiado. Por favor, revisa tu texto.");
+                    return false;
+                }
+            }
+
+            const regex = /^[A-Za-záéíóúñÁÉÍÓÚÑ0-9.,;:()¡!¿?\s]+$/;
+            if (!regex.test(description)) {
+                showErrorMessage("La descripción contiene caracteres no permitidos o no es coherente. Por favor, revisa tu texto.");
+                return false;
+            }
+
+            return true;
+        }
+
+        function generateQuestions() {
+            const description = document.getElementById('system-description').value;
+            if (!description) {
+                showErrorMessage("Por favor, describe el sistema para recibir preguntas personalizadas.");
+                return;
+            }
+
+            if (!isDescriptionValid(description)) {
+                return;
+            }
+
+            const questionsContainer = document.getElementById('questions-container');
+            questionsContainer.innerHTML = '';
+            document.getElementById('evaluation-form').style.display = 'block';
+
+            const selectedCategories = [];
+            if (/usabilidad/i.test(description)) selectedCategories.push('usabilidad');
+            if (/navegabilidad/i.test(description)) selectedCategories.push('navegabilidad');
+            if (/calidad/i.test(description)) selectedCategories.push('calidad');
+            if (/botones/i.test(description)) selectedCategories.push('buttons');
+            if (/general/i.test(description)) selectedCategories.push('general');
+
+            let selectedQuestions = [];
+            selectedCategories.forEach(category => {
+                selectedQuestions = selectedQuestions.concat(questionsDatabase[category]);
+            });
+
+            selectedQuestions.slice(0, 20).forEach((questionObj, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('question-container');
+                questionDiv.innerHTML = `
+                    <label>${index + 1}. ${questionObj.question}
+                    <span class="info-icon">❔<span class="tooltip">${questionObj.tooltip}</span></span>
+                    </label>
+                    <select name="q${index}" required>
+                        <option value="">Selecciona una opción</option>
+                        <option value="1">Muy malo</option>
+                        <option value="2">Malo</option>
+                        <option value="3">Regular</option>
+                        <option value="4">Bueno</option>
+                        <option value="5">Muy bueno</option>
+                    </select>`;
+                questionsContainer.appendChild(questionDiv);
+            });
+        }
+
+        function calculateResults() {
+            const form = document.getElementById('evaluation-form');
+            const responses = Array.from(form.elements).filter(el => el.tagName === 'SELECT');
+
+            for (let response of responses) {
+                if (response.value === "") {
+                    showErrorMessage("Por favor, responde a todas las preguntas.");
+                    return;
+                }
+            }
+
+            const totalScore = responses.reduce((acc, el) => acc + parseInt(el.value), 0);
+            const averageScore = totalScore / responses.length;
+            const usabilityPercentage = (averageScore / 5) * 100; // Convierte el puntaje promedio a porcentaje
+            const results = document.getElementById('results');
+            results.style.display = 'block';
+
+            let recommendations = '';
+            if (averageScore >= 4.5) {
+                recommendations = `
+                    <h3>Recomendaciones para Optimización (Ponderación: ${totalScore})</h3>
+                    <ul>
+                        <li><strong>Optimización del diseño visual:</strong> Asegurarse de que el diseño sea atractivo y funcional puede mejorar considerablemente la percepción de la plataforma. Aplicar la teoría de color y diseño adecuado para mejorar la experiencia visual (Nielsen, 1995).</li>
+                        <li><strong>Navegación simplificada:</strong> Una navegación simple y lógica facilita que los usuarios encuentren lo que buscan. Minimizar el número de clics necesarios para realizar una acción es clave (Krug, 2006).</li>
+                        <li><strong>Tiempo de respuesta rápido:</strong> Aumentar la velocidad de carga y mejorar el rendimiento del sistema reduce la frustración del usuario. Evaluar el código y realizar optimizaciones puede ser beneficioso (Shneiderman, 2014).</li>
+                        <li><strong>Adaptabilidad a dispositivos:</strong> Diseñar el sistema para que se adapte bien en dispositivos móviles mejora la accesibilidad (Morville, 2015).</li>
+                        <li><strong>Interacción efectiva:</strong> Incluir mensajes de retroalimentación en cada interacción del usuario crea una experiencia más fluida (Krug, 2006).</li>
+                    </ul>`;
+                results.innerHTML = `<h3>Excelente</h3><p>El sistema tiene alta usabilidad.</p><p>Porcentaje de Usabilidad: ${usabilityPercentage.toFixed(2)}%</p>` + recommendations;
+            } else if (averageScore >= 3) {
+                recommendations = `
+                    <h3>Recomendaciones de Mejoramiento Moderado (Ponderación: ${totalScore})</h3>
+                    <ul>
+                        <li><strong>Optimización en navegación</strong>: Simplificar la estructura del menú facilita que los usuarios encuentren rápidamente lo que necesitan, mejorando así la eficiencia (Krug, 2010).</li>
+                        <li><strong>Visibilidad de elementos clave</strong>: Para asegurar que los usuarios puedan localizar información esencial, es recomendable resaltar visualmente los elementos importantes mediante colores o ubicaciones estratégicas (Nielsen, 1995).</li>
+                        <li><strong>Reducir la cantidad de pasos para acceder a información común</strong>: Minimizar el número de clics y opciones a seguir mejora la usabilidad y ahorra tiempo a los usuarios. Implementar accesos directos para las funciones más utilizadas es una buena práctica (Shneiderman, 2014).</li>
+                    </ul>`;
+                results.innerHTML = `<h3>Adecuada</h3><p>El sistema tiene buena usabilidad, aunque se recomienda mejorar en algunas áreas.</p><p>Porcentaje de Usabilidad: ${usabilityPercentage.toFixed(2)}%</p>` + recommendations;
+            } else {
+                recommendations = `
+                    <h3>Recomendaciones Urgentes (Ponderación: ${totalScore})</h3>
+                    <ul>
+                        <li><strong>Restructurar la interfaz de usuario</strong>: El rediseño del sistema para que sea más claro y limpio puede mejorar la experiencia del usuario al disminuir la carga cognitiva (Lidwell, 2010).</li>
+                        <li><strong>Implementación de accesibilidad básica</strong>: Se sugiere aplicar principios básicos de accesibilidad, como fuentes legibles y contraste adecuado, que permitan la usabilidad sin importar la habilidad del usuario (Morville, 2015).</li>
+                        <li><strong>Capacitación en diseño de interfaz</strong>: Capacitar a los desarrolladores en mejores prácticas de usabilidad puede garantizar que la estructura del sistema sea intuitiva para los usuarios, mejorando la experiencia general (Nielsen, 1995).</li>
+                    </ul>`;
+                results.innerHTML = `<h3>Deficiente</h3><p>El sistema necesita mejoras significativas en usabilidad.</p><p>Porcentaje de Usabilidad: ${usabilityPercentage.toFixed(2)}%</p>` + recommendations;
+            }
+
+            // Mostrar el botón "Repetir Evaluación"
+            document.getElementById('retry-button').style.display = 'block';
+        }
+
+        // Función para reiniciar la evaluación
+        function retryEvaluation() {
+            document.getElementById('system-description').value = '';
+            document.getElementById('questions-container').innerHTML = '';
+            document.getElementById('evaluation-form').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('retry-button').style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>

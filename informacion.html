@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Información Adicional - Evaluación de Sistemas de Información</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            animation: fadeIn 1s ease-in;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        header {
+            background-color: #5DADE2;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            position: relative;
+        }
+
+        header img {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .container {
+            padding: 2rem;
+            max-width: 800px;
+            margin: auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            color: #2980B9;
+        }
+
+        .article {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 4px solid #2980B9;
+            background-color: #eaf4f8;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .article:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .article h3 {
+            margin-top: 0;
+        }
+
+        .article a {
+            color: #2980B9;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .article a:hover {
+            text-decoration: underline;
+            color: #0056b3;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #e74c3c;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            background-color: #c0392b;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .mode-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            z-index: 1000;
+            transition: transform 0.3s;
+        }
+
+        .mode-toggle img {
+            width: 30px;
+            height: 30px;
+            transition: transform 0.3s;
+        }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: #f4f4f4;
+        }
+
+        header.dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .dark-mode .container {
+            background-color: #333;
+            color: #f4f4f4;
+        }
+
+        .dark-mode .article {
+            background-color: #444;
+            color: #f4f4f4;
+        }
+
+        .dark-mode .back-button {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-button">Regresar a la página principal</a>
+
+    <header>
+        <h1 style="display: inline-block;">Información Adicional</h1>
+        <!-- Icono de lupa al lado del título -->
+        <img src="https://img.icons8.com/ios-filled/24/ffffff/search.png" alt="Lupa" title="Buscar" style="vertical-align: middle; margin-left: 10px; display: inline-block;">
+    </header>
+      
+
+    <!-- Botón de Modo Oscuro -->
+    <div class="mode-toggle" id="modeToggle">
+        <img src="https://img.icons8.com/ios-filled/50/000000/sun.png" id="modeIcon" alt="Modo Claro">
+    </div>
+
+    <div class="container">
+        <h2>Artículos e Investigaciones sobre Evaluación de Sistemas de Información</h2>
+        <p>A continuación se presentan artículos, investigaciones y recursos sobre la evaluación de usabilidad, calidad y eficiencia en sistemas de información académicos:</p>
+
+        <div class="article">
+            <h3>1. Diseños de sistemas interactivos centrados en el usuario</h3>
+            <p>Se enfoca en los principios y prácticas para desarrollar interfaces accesibles y usables, esenciales en la Interacción Persona-Ordenador (IPO). Los autores abordan temas como la usabilidad, accesibilidad, análisis de requisitos, prototipado y evaluación, integrando estas áreas en un modelo de diseño centrado en el usuario que busca crear sistemas efectivos y satisfactorios. A través de ejemplos y métodos prácticos, la obra guía a diseñadores y desarrolladores en cómo garantizar que sus sistemas interactivos no solo sean funcionales, sino también inclusivos, facilitando el acceso a la información.</p>
+            <p><a href="https://books.google.com/books/about/Dise%C3%B1o_de_sistemas_interactivos_centrad.html?id=Bk5Uv0Aiis0C" target="_blank"><img src="https://img.icons8.com/ios-filled/24/000000/book.png" alt="Libro"> Leer más</a></p>
+        </div>
+
+        <div class="article">
+            <h3>2. No me hagas pensar</h3>
+            <p>Es una guía fundamental sobre la usabilidad en el diseño web y de interfaces. Con un enfoque directo y accesible, Krug explica los principios clave para crear sitios y aplicaciones intuitivas, destacando que el usuario debe poder navegar y comprender el sistema sin esfuerzo, de manera casi instintiva. A través de ejemplos prácticos, el autor ilustra cómo simplificar el diseño, eliminar elementos innecesarios y optimizar la navegación, haciendo énfasis en el concepto de que un buen diseño no debería hacer pensar al usuario.</p>
+            <p><a href="https://solanalopez.com.ar/wp-content/uploads/2024/06/no_me_hagas_pensar.pdf" target="_blank"><img src="https://img.icons8.com/ios-filled/24/000000/book.png" alt="Libro"> Leer más</a></p>
+        </div>
+
+        <div class="article">
+            <h3>3. Usabilidad de los sitios Web, los métodos y las técnicas para la evaluación</h3>
+            <p>El artículo destaca la relevancia de la usabilidad en el desarrollo web, abordando cómo debe integrarse en la ingeniería de software para crear sistemas intuitivos y eficientes. Expone los conceptos básicos de usabilidad, sus atributos clave y métodos de evaluación, como el modelo SIRIUS, que permite identificar y mejorar aspectos críticos en la interacción del usuario.</p>
+            <p><a href="http://scielo.sld.cu/scielo.php?script=sci_arttext&pid=S2307-21132013000200007" target="_blank"><img src="https://img.icons8.com/ios-filled/24/000000/book.png" alt="Libro"> Leer más</a></p>
+        </div>
+
+        <div class="article">
+            <h3>4. Sistemas de Información: Herramientas Prácticas para la Gestión</h3>
+            <p>Esta investigación examina cómo los sistemas de información apoyan la gestión y mejoran la toma de decisiones en las organizaciones. A través de un enfoque práctico, el autor explora componentes clave como el análisis y diseño de sistemas, la gestión de datos y el impacto de la tecnología en la transformación digital. Con ejemplos y herramientas útiles, Veites guía a los lectores en la implementación de sistemas que optimizan procesos y elevan la eficiencia organizacional, convirtiéndose en una referencia esencial para quienes buscan aprovechar al máximo los sistemas de información en el ámbito empresarial..</p>
+            <p><a href="https://omeka.urbeuniversity.edu/files/original/25e5ab57e792ee30a3dcc4bff2c3af6e2863383e.pdf" target="_blank"><img src="https://img.icons8.com/ios-filled/24/000000/book.png" alt="Libro"> Leer más</a></p>
+        </div>
+
+        <div class="article">
+            <h3>5. Ingeniería de la Usabilidad y la Accesibilidad Aplicada al Diseño y Desarrollo de Sitios Web</h3>
+            <p>Esta indagación aborda los principios y técnicas esenciales para crear sitios web usables y accesibles. Lorés destaca la importancia de que los sitios web no solo sean fáciles de usar, sino que también estén diseñados para ser accesibles a personas con diversas capacidades. A lo largo del libro, se exploran conceptos clave de usabilidad, métodos de evaluación y herramientas para analizar y mejorar la experiencia del usuario. También se explica cómo integrar la accesibilidad en el proceso de diseño y desarrollo, garantizando que los sitios web cumplan con normativas y estándares, y proporcionando una experiencia de usuario inclusiva y efectiva. Este enfoque hace de la obra una referencia útil para diseñadores y desarrolladores interesados en crear sitios web accesibles para todos los usuarios.</p>
+            <p><a href="https://utncomunicacionprofesional.wordpress.com/wp-content/uploads/2012/04/ingenieria-de-sitios-web.pdf" target="_blank"><img src="https://img.icons8.com/ios-filled/24/000000/book.png" alt="Libro"> Leer más</a></p>
+        </div>
+
+        <div class="article">
+            <h3>6. Evaluación de usabilidad de un sistema de administración de cursos basado en la plataforma Lingweb</h3>
+            <p>Este artículo presenta un enfoque metodológico para evaluar la usabilidad en Sistemas de Administración de Cursos (CMS) utilizando una mezcla de métodos tradicionales y nuevos criterios, aplicados específicamente en la plataforma de aprendizaje Lingweb. La evaluación abarca no solo la usabilidad, sino también la funcionalidad y el aspecto pedagógico del sistema, aprovechando sesiones con “Tester Users” (usuarios evaluadores) para obtener información detallada. Los resultados permiten un análisis exhaustivo de Lingweb desde las perspectivas de eficiencia, usabilidad y soporte pedagógico, destacando la importancia de integrar la evaluación de usabilidad en el ciclo de vida del desarrollo de software para realizar mejoras antes de que el producto llegue al usuario final.</p>
+            <p><a href="http://www.scielo.cl/scielo.php?script=sci_arttext&pid=S0718-33052016000300008" target="_blank"><img src="https://img.icons8.com/ios-filled/24/000000/book.png" alt="Libro"> Leer más</a></p>
+        </div>
+
+        <div class="article">
+            <h3>7. Reflexiones acerca de los sistemas de información universitarios ante los desafíos y cambios generados por los procesos de evaluación y acreditación</h3>
+            <p>Este artículo analiza cómo los procesos de evaluación y acreditación impactan en los sistemas de información universitarios. A medida que las universidades enfrentan mayores demandas para demostrar su calidad y efectividad, los sistemas de información deben adaptarse para cumplir con estos requisitos. Se reflexiona sobre los desafíos que esto implica, como la necesidad de integrar nuevas tecnologías, mejorar la accesibilidad a la información y asegurar que los datos sean confiables y útiles para la toma de decisiones. Ademas, el artículo destaca la importancia de que los sistemas de información universitarios sean flexibles y eficientes para apoyar tanto el cumplimiento de estándares como la mejora continua en las instituciones educativas.</p>
+            <p><a href="https://www.scielo.br/j/aval/a/LrQHyNG5BGSKrt8KR9Kr7RG/?format=pdf&lang=es" target="_blank"><img src="https://img.icons8.com/ios-filled/24/000000/book.png" alt="Libro"> Leer más</a></p>
+        </div>
+
+        <div class="article">
+            <h3>8. Experiencia del Usuario en Plataformas Académicas</h3>
+            <p>Este artículo explora los distintos métodos y técnicas para evaluar la usabilidad de sitios web. Se analiza cómo la usabilidad es fundamental para asegurar que un sitio web sea intuitivo y eficiente para los usuarios. Se revisan enfoques de evaluación como la evaluación heurística, pruebas con usuarios, y métodos de inspección y observación, destacando las ventajas de cada uno en diferentes contextos. El artículo subraya la importancia de seleccionar métodos de evaluación que permitan obtener una retroalimentación completa sobre la experiencia del usuario, con el objetivo de optimizar el diseño y funcionamiento de los sitios web..</p>
+            <p><a href="https://acimed.sld.cu/index.php/acimed/article/view/405/306" target="_blank"><img src="https://img.icons8.com/ios-filled/24/000000/book.png" alt="Libro"> Leer más</a></p>
+        </div>
+
+    </div>
+
+    <script>
+        // Funcionalidad del modo oscuro
+        const modeToggle = document.getElementById('modeToggle');
+        const modeIcon = document.getElementById('modeIcon');
+        const body = document.body;
+        const header = document.querySelector('header');
+
+        modeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            header.classList.toggle('dark-mode');
+
+            if (body.classList.contains('dark-mode')) {
+                modeIcon.src = 'https://img.icons8.com/ios-filled/50/ffffff/moon-symbol.png'; // Luna
+                modeIcon.alt = 'Modo Oscuro';
+            } else {
+                modeIcon.src = 'https://img.icons8.com/ios-filled/50/000000/sun.png'; // Sol
+                modeIcon.alt = 'Modo Claro';
+            }
+        });
+    </script>
+</body>
+</html>

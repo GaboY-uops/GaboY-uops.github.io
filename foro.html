@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Foro de Discusión con Seguridad de Contraseña</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            text-align: center;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            position: relative;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #FF0000;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .mode-toggle img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 60px auto 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-box {
+            background-color: #eaf4e1;
+            border: 2px solid #4CAF50;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            color: #333;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .registration, .new-post {
+            margin-bottom: 20px;
+        }
+
+        .registration input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .registration button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+
+        .registration button:hover {
+            background-color: #0056b3;
+        }
+
+        .new-post textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            resize: vertical;
+        }
+
+        .new-post button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .new-post button:hover {
+            background-color: #0056b3;
+        }
+
+        .post {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+            position: relative;
+        }
+
+        .post h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #4CAF50;
+        }
+
+        .post p {
+            margin: 5px 0;
+        }
+
+        .reply {
+            margin-top: 10px;
+            position: relative;
+        }
+
+        .reply-button, .edit-button, .delete-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .edit-button {
+            background-color: #FFA500;
+            right: 80px;
+        }
+
+        .reply-button {
+            background-color: #4CAF50;
+            right: 150px;
+        }
+
+        /* Modo oscuro */
+        body.dark-mode {
+            background-color: #121212;
+            color: #f4f4f4;
+        }
+
+        body.dark-mode .container {
+            background-color: #333;
+            color: #f4f4f4;
+        }
+
+        body.dark-mode input,
+        body.dark-mode textarea {
+            background-color: #444;
+            color: #fff;
+            border-color: #666;
+        }
+
+        /* Estilo para ventanas emergentes */
+        .custom-alert {
+            position: fixed;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f44336;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            z-index: 2000;
+        }
+
+        .custom-success {
+            background-color: #4CAF50;
+        }
+
+        /* Ventana emergente creativa */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .modal button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .modal button:hover {
+            background-color: #0056b3;
+        }
+
+        .modal h2 {
+            margin: 0;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .close-modal {
+            background-color: #FF0000;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            float: right;
+        }
+
+        .close-modal:hover {
+            background-color: #c62828;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            color: white;
+            font-size: 14px;
+            background-color: #4CAF50; /* Color de fondo verde */
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        footer {
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 1rem; /* Valor original */
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Ajustes para dispositivos móviles */
+@media (max-width: 768px) {
+    footer {
+        padding: 0.5rem; /* Reduce el espacio del padding */
+        font-size: 12px; /* Ajusta el tamaño de la fuente */
+    }
+}
+
+    </style>
+</head>
+<body>
+    <!-- Botón de regreso -->
+    <button class="back-button" onclick="window.history.back()">
+        Regresar
+    </button>
+
+    <!-- Botón para alternar entre modo claro y oscuro -->
+    <div class="mode-toggle" id="modeToggle">
+        <img src="https://img.icons8.com/ios-filled/50/000000/sun.png" id="modeIcon" alt="Modo Claro">
+    </div>
+
+    <header>
+        <h1>Foro de Discusión</h1>
+    </header>
+
+    <div class="container">
+        <div class="info-box">
+            Este foro está diseñado para discutir temas relacionados con términos que engloban a los sistemas de información, en particular, los que se manejan en sistemas universitarios. Por favor, mantén el respeto en todo momento al comentar y colabora de manera constructiva, compartiendo todo el conocimiento que tengas y opiniones relacionadas con este tema.
+        </div>
+
+        <div class="registration">
+            <h2>Registrarse</h2>
+            <input type="text" id="username" placeholder="Escribe tu nombre">
+            <input type="password" id="password" placeholder="Crea una contraseña">
+            <button onclick="registerUser()">Registrarse</button>
+            <button onclick="showLoginModal()">Iniciar Sesión</button>
+        </div>
+
+        <div class="new-post">
+            <h2>Publicar un Nuevo Tema</h2>
+            <textarea id="new-post-content" placeholder="Escribe tu mensaje aquí..."></textarea>
+            <button onclick="addPost()">Publicar</button>
+        </div>
+
+        <div id="posts">
+            <!-- Aquí aparecerán las publicaciones -->
+        </div>
+
+        <!-- Ventana emergente para la contraseña y el nombre de usuario -->
+        <div class="modal" id="passwordModal">
+            <h2>Iniciar Sesión</h2>
+            <button class="close-modal" onclick="closeLoginModal()">Cerrar</button>
+            <input type="text" id="loginUsername" placeholder="Nombre de usuario">
+            <input type="password" id="modalPassword" placeholder="Contraseña">
+            <button onclick="verifyPassword()">Aceptar</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Proyecto de Desarrollo de proyectos computacionales. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        let currentUser = null;
+        let currentPassword = null;
+        let posts = JSON.parse(localStorage.getItem('posts')) || [];
+        let registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || {};
+        const inappropriateWords = ["mala", "palabra", "ofensiva", "puto", "madre", "chinga", "pendejo", "wey", "verga", "mierda", "fuck", "idiota", "morir", "mueras"]; // Lista de palabras ofensivas
+
+        function registerUser() {
+            const usernameInput = document.getElementById('username').value;
+            const usernameLower = usernameInput.toLowerCase();
+            const passwordInput = document.getElementById('password').value;
+
+            if (usernameInput.trim() === '' || passwordInput.trim() === '') {
+                customAlert('Por favor, completa todos los campos.');
+                return;
+            }
+
+            if (registeredUsers[usernameLower]) {
+                customAlert('El nombre ya está registrado. Por favor, usa otro nombre.');
+                return;
+            }
+
+            if (currentUser) {
+                currentUser = null;
+                currentPassword = null;
+            }
+
+            registeredUsers[usernameLower] = { original: usernameInput, password: passwordInput };
+            localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+            currentUser = usernameInput;
+            currentPassword = passwordInput;
+            localStorage.setItem('currentUser', currentUser);
+            localStorage.setItem('currentPassword', currentPassword);
+            customAlert('Registro exitoso. Contraseña guardada.', 'success');
+
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        function verifyPassword() {
+            const loginUsername = document.getElementById('loginUsername').value.toLowerCase();
+            const enteredPassword = document.getElementById('modalPassword').value;
+
+            if (!registeredUsers[loginUsername] || registeredUsers[loginUsername].password !== enteredPassword) {
+                customAlert('Nombre de usuario o contraseña incorrecta.');
+                return;
+            }
+
+            currentUser = registeredUsers[loginUsername].original;
+            currentPassword = enteredPassword;
+            localStorage.setItem('currentUser', currentUser);
+            localStorage.setItem('currentPassword', currentPassword);
+            customAlert('Acceso concedido.', 'success');
+            document.getElementById('passwordModal').style.display = 'none';
+        }
+
+        function closeLoginModal() {
+            document.getElementById('passwordModal').style.display = 'none';
+        }
+
+        function containsInappropriateLanguage(text) {
+            const lowerCaseText = text.toLowerCase();
+            return inappropriateWords.some(word => lowerCaseText.includes(word));
+        }
+
+        function addPost() {
+            if (!currentUser) {
+                customAlert('Debes registrarte antes de publicar.');
+                return;
+            }
+
+            const content = document.getElementById('new-post-content').value;
+            if (content.trim() === '') {
+                customAlert('Por favor, escribe un mensaje antes de publicar.');
+                return;
+            }
+
+            if (containsInappropriateLanguage(content)) {
+                customAlert('Tu mensaje contiene lenguaje inapropiado. Modifícalo antes de publicar.');
+                return;
+            }
+
+            const newPost = {
+                username: currentUser,
+                content: content,
+                replies: []
+            };
+
+            posts.push(newPost);
+            localStorage.setItem('posts', JSON.stringify(posts));
+            renderPosts();
+            document.getElementById('new-post-content').value = '';
+        }
+
+        function customAlert(message, type = 'error') {
+            const alertBox = document.createElement('div');
+            alertBox.classList.add('custom-alert');
+            if (type === 'success') {
+                alertBox.classList.add('custom-success');
+            }
+            alertBox.textContent = message;
+            document.body.appendChild(alertBox);
+
+            setTimeout(() => {
+                alertBox.remove();
+            }, 3000);
+        }
+
+        function showLoginModal() {
+            document.getElementById('passwordModal').style.display = 'block';
+        }
+
+        // Funcionalidad para cambiar entre modo oscuro y modo claro
+        const modeToggle = document.getElementById('modeToggle');
+        const modeIcon = document.getElementById('modeIcon');
+        const body = document.body;
+
+        modeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+
+            if (body.classList.contains('dark-mode')) {
+                modeIcon.src = 'https://img.icons8.com/ios-filled/50/ffffff/moon-symbol.png';
+                modeIcon.alt = 'Modo Oscuro';
+            } else {
+                modeIcon.src = 'https://img.icons8.com/ios-filled/50/000000/sun.png';
+                modeIcon.alt = 'Modo Claro';
+            }
+        });
+
+        renderPosts();
+
+        function renderPosts() {
+            const postsContainer = document.getElementById('posts');
+            postsContainer.innerHTML = '';
+            posts.forEach((post, index) => {
+                const postElement = document.createElement('div');
+                postElement.classList.add('post');
+                let buttonsHTML = '';
+
+                if (post.username === currentUser) {
+                    buttonsHTML = `
+                        <button class="edit-button" onclick="editPost(${index})">Editar</button>
+                        <button class="delete-button" onclick="deletePost(${index})">Eliminar</button>
+                    `;
+                }
+
+                const repliesHTML = post.replies.map((reply, replyIndex) => {
+                    let replyButtonsHTML = '';
+                    if (reply.username === currentUser) {
+                        replyButtonsHTML = `
+                            <button class="edit-button" onclick="editReply(${index}, ${replyIndex})">Editar</button>
+                            <button class="delete-button" onclick="deleteReply(${index}, ${replyIndex})">Eliminar</button>
+                        `;
+                    }
+                    return `
+                        <div class="reply">
+                            <strong>${reply.username}:</strong> ${reply.content}
+                            ${replyButtonsHTML}
+                        </div>
+                    `;
+                }).join('');
+
+                postElement.innerHTML = `
+                    <h3>${post.username}</h3>
+                    <p>${post.content}</p>
+                    ${buttonsHTML}
+                    <button class="reply-button" onclick="addReply(${index})">Responder</button>
+                    <div class="replies">${repliesHTML}</div>
+                `;
+                postsContainer.appendChild(postElement);
+            });
+        }
+
+        function editPost(index) {
+            if (posts[index].username !== currentUser) {
+                customAlert('No puedes editar esta publicación.');
+                return;
+            }
+
+            const newContent = prompt('Edita tu mensaje:', posts[index].content);
+            if (newContent && newContent.trim() !== '') {
+                if (containsInappropriateLanguage(newContent)) {
+                    customAlert('Tu mensaje editado contiene lenguaje inapropiado. Modifícalo antes de guardar.');
+                    return;
+                }
+                posts[index].content = newContent;
+                localStorage.setItem('posts', JSON.stringify(posts));
+                renderPosts();
+            }
+        }
+
+        function deletePost(index) {
+            if (posts[index].username !== currentUser) {
+                customAlert('No puedes eliminar esta publicación.');
+                return;
+            }
+
+            if (confirm('¿Estás seguro de que deseas eliminar esta publicación?')) {
+                posts.splice(index, 1);
+                localStorage.setItem('posts', JSON.stringify(posts));
+                renderPosts();
+            }
+        }
+
+        function addReply(index) {
+            if (!currentUser) {
+                customAlert('Debes iniciar sesión para responder.');
+                return;
+            }
+
+            const replyContent = prompt('Escribe tu respuesta:');
+            if (replyContent && replyContent.trim() !== '') {
+                if (containsInappropriateLanguage(replyContent)) {
+                    customAlert('Tu respuesta contiene lenguaje inapropiado. Modifícala antes de publicar.');
+                    return;
+                }
+                posts[index].replies.push({
+                    username: currentUser,
+                    content: replyContent
+                });
+                localStorage.setItem('posts', JSON.stringify(posts));
+                renderPosts();
+            }
+        }
+
+        function editReply(postIndex, replyIndex) {
+            const reply = posts[postIndex].replies[replyIndex];
+            if (reply.username !== currentUser) {
+                customAlert('No puedes editar esta respuesta.');
+                return;
+            }
+
+            const newContent = prompt('Edita tu respuesta:', reply.content);
+            if (newContent && newContent.trim() !== '') {
+                if (containsInappropriateLanguage(newContent)) {
+                    customAlert('Tu respuesta editada contiene lenguaje inapropiado. Modifícala antes de guardar.');
+                    return;
+                }
+                reply.content = newContent;
+                localStorage.setItem('posts', JSON.stringify(posts));
+                renderPosts();
+            }
+        }
+
+        function deleteReply(postIndex, replyIndex) {
+            const reply = posts[postIndex].replies[replyIndex];
+            if (reply.username !== currentUser) {
+                customAlert('No puedes eliminar esta respuesta.');
+                return;
+            }
+
+            if (confirm('¿Estás seguro de que deseas eliminar esta respuesta?')) {
+                posts[postIndex].replies.splice(replyIndex, 1);
+                localStorage.setItem('posts', JSON.stringify(posts));
+                renderPosts();
+            }
+        }
+    </script>
+</body>
+</html>

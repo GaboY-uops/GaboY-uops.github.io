@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descargas</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            transition: background-color 0.3s;
+        }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: #f4f4f4;
+        }
+
+        body.dark-mode .container {
+            background-color: #333;
+        }
+
+        /* Estilo para documentos */
+        .document {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+
+        .document img {
+            width: 80px;
+            height: 80px;
+        }
+
+        .document-content {
+            flex: 1;
+        }
+
+        .document-description {
+            padding: 10px;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            background-color: #eaf4e1;
+            color: #333;
+        }
+
+        body.dark-mode .document-description {
+            background-color: #444;
+            color: #f4f4f4;
+            border-color: #76c893;
+        }
+
+        .document-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .download-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007BFF;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .download-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .rating {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .rating button {
+            padding: 10px;
+            border: none;
+            background-color: #FFD700;
+            color: #333;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: transform 0.2s, background-color 0.3s;
+        }
+
+        .rating button:hover {
+            transform: translateY(-2px);
+            background-color: #FFC107;
+        }
+
+        /* Botones superiores */
+        .top-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 95%;
+        }
+
+        .mode-toggle, .back-button {
+            font-size: 16px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .mode-toggle {
+            background-color: #007BFF;
+        }
+
+        .mode-toggle:hover {
+            background-color: #0056b3;
+        }
+
+        .back-button {
+            background-color: #f44336;
+        }
+
+        .back-button:hover {
+            background-color: #d32f2f;
+        }
+
+        /* Alertas */
+        .alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            text-align: center;
+        }
+
+        .alert-success {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .alert-error {
+            background-color: #f44336;
+            color: white;
+        }
+
+        /* Botón de modo oscuro */
+.mode-toggle {
+    width: 40px; /* Reduce el tamaño del botón */
+    height: 40px;
+    border: none; /* Elimina los bordes */
+    background-color: transparent; /* Fondo transparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.3s;
+}
+
+.mode-toggle img {
+    width: 24px; /* Tamaño más pequeño del icono */
+    height: 24px;
+    filter: invert(0); /* Mantén el icono en negro */
+    transition: filter 0.3s;
+}
+
+body.dark-mode .mode-toggle img {
+    filter: invert(1); /* Invierte los colores para el modo oscuro */
+}
+
+.mode-toggle:hover {
+    transform: scale(1.1); /* Añade una animación al pasar el ratón */
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="top-buttons">
+            <a href="index.html" class="back-button">Regresar</a>
+            <div class="mode-toggle" id="modeToggle">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/sun.png" id="modeIcon" alt="Modo Claro">
+            </div>
+        </div>
+        <h1>Documentos para Descargar</h1>
+    </header>
+
+    <!-- Contenedor de descargas -->
+    <div class="container">
+        <!-- Manual Técnico -->
+        <div class="document">
+            <img src="https://img.icons8.com/fluency/96/pdf.png" alt="Icono del Manual Técnico">
+            <div class="document-content">
+                <div class="document-title">Manual Técnico</div>
+                <div class="document-description">
+                    Este manual técnico detalla los pasos necesarios para evaluar la usabilidad, calidad y eficiencia de los sistemas de información en universidades. Contiene métricas de evaluación, ejemplos de implementación, y recomendaciones basadas en estándares internacionales como ISO 9241-11 y ISO/IEC 25010. 
+                    <br><br>
+                    Ideal para desarrolladores y administradores de sistemas que buscan mejorar la experiencia de usuario y optimizar el desempeño de sus plataformas.
+                </div>
+                <div class="download-buttons">
+                    <a href="manual-tecnico.pdf" download class="download-button">Descargar PDF</a>
+                    <a href="manual-tecnico.docx" download class="download-button">Descargar Word</a>
+                </div>
+                <div class="rating">
+                    <p>Califica este documento:</p>
+                    <button onclick="rateDocument(5)">⭐️⭐️⭐️⭐️⭐️</button>
+                    <button onclick="rateDocument(4)">⭐️⭐️⭐️⭐️</button>
+                    <button onclick="rateDocument(3)">⭐️⭐️⭐️</button>
+                </div>
+            </div>
+        </div>
+        <!-- Guía de Usuario -->
+        <div class="document">
+            <img src="https://img.icons8.com/fluency/96/user-manual.png" alt="Icono de la Guía de Usuario">
+            <div class="document-content">
+                <div class="document-title">Guía de Usuario</div>
+                <div class="document-description">
+                    Esta guía de usuario es un recurso completo diseñado para ayudarte a utilizar la página web creada para evaluar y mejorar los sistemas de información universitarios. Incluye instrucciones detalladas y ejemplos prácticos que abarcan:
+                    <ul>
+                        <li>Cómo usar las herramientas de evaluación disponibles en el sitio.</li>
+                        <li>La funcionalidad del cada una de las secciones que contiene la página.</li>
+                        <li>El uso del chatbot integrado como asistente para resolver dudas frecuentes.</li>
+                        <li>Acceso a recursos como el calendario de fases y la checklist de cumplimiento.</li>
+                        <li>Recomendaciones técnicas para desarrolladores interesados en personalizar o ampliar el sistema.</li>
+                    </ul>
+                    <br>
+                    Ideal tanto para usuarios finales como para administradores y desarrolladores que buscan mejorar sus sistemas en términos de usabilidad, navegabilidad y experiencia del usuario.
+                </div>
+                <div class="download-buttons">
+                    <a href="guia-usuario.pdf" download class="download-button">Descargar PDF</a>
+                    <a href="guia-usuario.docx" download class="download-button">Descargar Word</a>
+                </div>
+                <div class="rating">
+                    <p>Califica este documento:</p>
+                    <button onclick="rateDocument(5)">⭐️⭐️⭐️⭐️⭐️</button>
+                    <button onclick="rateDocument(4)">⭐️⭐️⭐️⭐️</button>
+                    <button onclick="rateDocument(3)">⭐️⭐️⭐️</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenedor de alertas -->
+    <div id="alertBox" class="alert"></div>
+
+    <script>
+        // Funcionalidad de modo oscuro
+        const modeToggle = document.getElementById('modeToggle');
+        const modeIcon = document.getElementById('modeIcon');
+        const body = document.body;
+
+        modeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            modeIcon.src = body.classList.contains('dark-mode') 
+                ? 'https://img.icons8.com/ios-filled/50/ffffff/moon-symbol.png' 
+                : 'https://img.icons8.com/ios-filled/50/000000/sun.png';
+        });
+
+        // Función para mostrar mensajes de alerta
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.textContent = message;
+            alertBox.className = `alert alert-${type}`;
+            alertBox.style.display = 'block';
+
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+            }, 3000);
+        }
+
+        // Calificar documento
+        function rateDocument(rating) {
+            showAlert(`Gracias por tu valoración de ${rating} estrellas.`, 'success');
+        }
+    </script>
+</body>
+</html>

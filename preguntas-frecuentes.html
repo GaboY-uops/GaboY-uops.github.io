@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Preguntas Frecuentes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .container {
+            padding: 2rem;
+            padding-bottom: 100px;
+        }
+
+        footer {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: #FF0000;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .mode-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .dark-mode {
+            background-color: #121212;
+            color: #f4f4f4;
+        }
+
+        .ask-question {
+            margin-top: 2rem;
+        }
+
+        .ask-question textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            resize: vertical;
+        }
+
+        .ask-question button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .ask-question button:hover {
+            background-color: #45a049;
+        }
+
+        #userQuestionsContainer {
+            margin-top: 2rem;
+        }
+
+        .admin-button {
+            background-color: #FF0000;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .admin-section {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .admin-section textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+
+        .logout-button {
+            background-color: #FF0000;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .admin-section button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .admin-section button:hover {
+            background-color: #218838;
+        }
+
+        .custom-alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="window.history.back()">Regresar</button>
+    <button class="mode-toggle" onclick="toggleMode()">
+        <img src="https://img.icons8.com/ios-filled/30/ffffff/moon-symbol.png" alt="Modo Oscuro" id="modeIcon">
+    </button>
+
+    <header>
+        <h1>Preguntas Frecuentes</h1>
+    </header>
+
+    <div class="container">
+        <h2>Preguntas Frecuentes</h2>
+        <!-- Aquí están todas las 20 preguntas frecuentes -->
+        <p><strong>Pregunta 1:</strong> ¿Qué es el proyecto?</p>
+        <p>Respuesta 1: El proyecto es una guía metodológica para evaluar la usabilidad y calidad de los sistemas de información en las universidades del Estado de Hidalgo.</p>
+
+        <p><strong>Pregunta 2:</strong> ¿Cómo se aplica el marco metodológico?</p>
+        <p>Respuesta 2: El marco se aplica en fases, desde la definición de los objetivos hasta la implementación de mejoras basadas en la retroalimentación.</p>
+
+        <p><strong>Pregunta 3:</strong> ¿Qué herramientas se utilizan en el proceso de evaluación?</p>
+        <p>Respuesta 3: Se utilizan encuestas, métricas de usabilidad, y análisis de datos para evaluar los sistemas de información.</p>
+
+        <p><strong>Pregunta 4:</strong> ¿Qué beneficios ofrece el uso de este marco metodológico?</p>
+        <p>Respuesta 4: El marco garantiza una evaluación sistemática y detallada de la calidad y usabilidad de los sistemas, mejorando la experiencia del usuario y la eficiencia del sistema.</p>
+
+        <p><strong>Pregunta 5:</strong> ¿Cómo se implementan las mejoras sugeridas?</p>
+        <p>Respuesta 5: Las mejoras se implementan en función de los resultados obtenidos en la evaluación, priorizando los aspectos críticos de usabilidad y calidad que afectan directamente la operación del sistema.</p>
+
+        <p><strong>Pregunta 6:</strong> ¿Cómo puedo contribuir con feedback para la mejora del sistema?</p>
+        <p>Respuesta 6: Puedes proporcionar tu feedback a través de las encuestas enviadas por correo o directamente desde el sistema, donde podrás reportar problemas y sugerencias de mejora.</p>
+
+        <p><strong>Pregunta 7:</strong> ¿Cuánto tiempo lleva realizar una evaluación completa?</p>
+        <p>Respuesta 7: El tiempo depende del tamaño y complejidad del sistema, pero generalmente toma de 2 a 4 semanas desde la recopilación de datos hasta la implementación de mejoras.</p>
+
+        <p><strong>Pregunta 8:</strong> ¿Qué pasa si no se implementan las mejoras recomendadas?</p>
+        <p>Respuesta 8: No implementar las mejoras puede llevar a problemas de usabilidad persistentes, lo que puede afectar la satisfacción del usuario y la eficiencia del sistema.</p>
+
+        <p><strong>Pregunta 9:</strong> ¿El marco metodológico es aplicable solo a universidades?</p>
+        <p>Respuesta 9: Aunque está diseñado para universidades, los principios y procesos pueden adaptarse para otros entornos con sistemas de información similares.</p>
+
+        <p><strong>Pregunta 10:</strong> ¿Puedo adaptar el marco a las necesidades específicas de mi universidad?</p>
+        <p>Respuesta 10: Sí, el marco es flexible y se puede personalizar para abordar los problemas específicos y objetivos de cada institución.</p>
+
+        <p><strong>Pregunta 11:</strong> ¿Qué estándares se utilizan en la evaluación?</p>
+        <p>Respuesta 11: Se utilizan estándares internacionales como ISO/IEC 25010 para evaluar la calidad y la usabilidad del sistema.</p>
+
+        <p><strong>Pregunta 12:</strong> ¿Se necesita experiencia técnica para aplicar el marco?</p>
+        <p>Respuesta 12: No es necesario tener conocimientos técnicos avanzados, pero se recomienda que el equipo de evaluación tenga una comprensión básica de los sistemas de información.</p>
+
+        <p><strong>Pregunta 13:</strong> ¿Cómo se mide la satisfacción del usuario?</p>
+        <p>Respuesta 13: La satisfacción del usuario se mide a través de encuestas específicas que evalúan la facilidad de uso, la eficiencia y la percepción general del sistema.</p>
+
+        <p><strong>Pregunta 14:</strong> ¿Qué tipo de métricas se utilizan en la evaluación?</p>
+        <p>Respuesta 14: Se utilizan métricas como el tiempo de respuesta, la tasa de errores y la facilidad de navegación para medir la usabilidad y eficiencia del sistema.</p>
+
+        <p><strong>Pregunta 15:</strong> ¿Es necesario realizar evaluaciones periódicas?</p>
+        <p>Respuesta 15: Sí, realizar evaluaciones periódicas ayuda a mantener la calidad del sistema y a adaptarlo a las necesidades cambiantes de los usuarios.</p>
+
+        <p><strong>Pregunta 16:</strong> ¿Qué papel juegan los usuarios en la evaluación?</p>
+        <p>Respuesta 16: Los usuarios son esenciales, ya que proporcionan feedback directo sobre la experiencia de uso, lo que permite identificar problemas y oportunidades de mejora.</p>
+
+        <p><strong>Pregunta 17:</strong> ¿Cómo se protege la privacidad de los datos recopilados?</p>
+        <p>Respuesta 17: La privacidad de los datos se protege siguiendo políticas estrictas y utilizando métodos seguros para la recopilación y almacenamiento de información.</p>
+
+        <p><strong>Pregunta 18:</strong> ¿Se puede integrar este marco con otras metodologías?</p>
+        <p>Respuesta 18: Sí, el marco se puede combinar con otras metodologías ágiles o tradicionales para obtener una evaluación más completa y eficiente.</p>
+
+        <p><strong>Pregunta 19:</strong> ¿Cuáles son los desafíos comunes al aplicar el marco?</p>
+        <p>Respuesta 19: Algunos desafíos incluyen la resistencia al cambio, la falta de recursos y la necesidad de obtener la participación activa de todos los involucrados.</p>
+
+        <p><strong>Pregunta 20:</strong> ¿El marco metodológico es adecuado para sistemas complejos?</p>
+        <p>Respuesta 20: Sí, el marco es escalable y puede adaptarse para evaluar tanto sistemas simples como complejos, asegurando una evaluación exhaustiva y precisa.</p>
+
+        <div class="ask-question">
+            <h3>¿Tienes una pregunta que no se encuentra aquí?</h3>
+            <textarea id="userQuestion" placeholder="Escribe tu pregunta aquí..."></textarea>
+            <button onclick="submitQuestion()">Enviar Pregunta</button>
+        </div>
+
+        <button class="admin-button" onclick="adminLogin()">Acceso de Administrador</button>
+
+        <div class="admin-section" id="adminSection">
+            <h3>Preguntas enviadas por los usuarios</h3>
+            <div id="adminQuestionsContainer"></div>
+            <button class="logout-button" onclick="logoutAdmin()">Cerrar Sesión</button>
+        </div>
+
+        <div id="answeredQuestionsContainer">
+            <h3>Preguntas realizadas por los usuarios</h3>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Proyecto de Desarrollo de proyectos computacionales. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        function toggleMode() {
+            document.body.classList.toggle('dark-mode');
+            const modeIcon = document.getElementById('modeIcon');
+            if (document.body.classList.contains('dark-mode')) {
+                modeIcon.src = "https://img.icons8.com/ios-filled/30/ffffff/sun.png";
+                modeIcon.alt = "Modo Claro";
+            } else {
+                modeIcon.src = "https://img.icons8.com/ios-filled/30/000000/moon-symbol.png";
+                modeIcon.alt = "Modo Oscuro";
+            }
+        }
+
+        function submitQuestion() {
+            const question = document.getElementById('userQuestion').value.trim();
+            if (question) {
+                let questions = JSON.parse(localStorage.getItem('userQuestions')) || [];
+                questions.push({ question: question, answer: null });
+                localStorage.setItem('userQuestions', JSON.stringify(questions));
+
+                const alertBox = document.createElement('div');
+                alertBox.classList.add('custom-alert');
+                alertBox.textContent = "Tu pregunta ha sido enviada y será revisada pronto.";
+                document.body.appendChild(alertBox);
+
+                setTimeout(() => {
+                    alertBox.remove();
+                }, 3000);
+
+                document.getElementById('userQuestion').value = '';
+                displayAnsweredQuestions();
+            } else {
+                alert("Por favor, escribe una pregunta antes de enviar.");
+            }
+        }
+
+        function displayAnsweredQuestions() {
+            let questions = JSON.parse(localStorage.getItem('userQuestions')) || [];
+            const answeredContainer = document.getElementById('answeredQuestionsContainer');
+            answeredContainer.innerHTML = "";
+
+            questions.forEach((q, index) => {
+                answeredContainer.innerHTML += `
+                    <div>
+                        <p><strong>Pregunta ${index + 1}:</strong> ${q.question}<br>${q.answer ? `<strong>Respuesta:</strong> ${q.answer}` : 'Sin respuesta'}</p>
+                    </div>`;
+            });
+        }
+
+        function adminLogin() {
+            const password = prompt("Por favor, ingresa la contraseña de administrador:");
+            if (password === "preguntas") {
+                document.getElementById('adminSection').style.display = 'block';
+                displayAdminQuestions();
+            } else {
+                alert("Contraseña incorrecta.");
+            }
+        }
+
+        function logoutAdmin() {
+            document.getElementById('adminSection').style.display = 'none';
+        }
+
+        function displayAdminQuestions() {
+            let questions = JSON.parse(localStorage.getItem('userQuestions')) || [];
+            const adminContainer = document.getElementById('adminQuestionsContainer');
+            adminContainer.innerHTML = "";
+
+            questions.forEach((q, index) => {
+                if (!q.answer) {
+                    adminContainer.innerHTML += `
+                        <div>
+                            <p><strong>Pregunta ${index + 1}:</strong> ${q.question}</p>
+                            <textarea id="answer${index}" placeholder="Escribe tu respuesta aquí..."></textarea>
+                            <button onclick="submitAnswer(${index})">Enviar Respuesta</button>
+                            <button onclick="deleteQuestion(${index})" style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Eliminar</button>
+                        </div>`;
+                }
+            });
+        }
+
+        function submitAnswer(index) {
+            let questions = JSON.parse(localStorage.getItem('userQuestions')) || [];
+            const answer = document.getElementById(`answer${index}`).value.trim();
+            if (answer) {
+                questions[index].answer = answer;
+                localStorage.setItem('userQuestions', JSON.stringify(questions));
+                alert("Respuesta enviada.");
+                displayAdminQuestions();
+                displayAnsweredQuestions();
+            } else {
+                alert("Por favor, escribe una respuesta antes de enviar.");
+            }
+        }
+
+        function deleteQuestion(index) {
+            let questions = JSON.parse(localStorage.getItem('userQuestions')) || [];
+            questions.splice(index, 1);
+            localStorage.setItem('userQuestions', JSON.stringify(questions));
+            alert("Pregunta eliminada.");
+            displayAdminQuestions();
+            displayAnsweredQuestions();
+        }
+
+        displayAnsweredQuestions();
+    </script>
+</body>
+</html>
