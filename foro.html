@@ -269,11 +269,13 @@
     background-color: #4CAF50;
     color: white;
     text-align: center;
-    padding: 1rem; /* Valor original */
-    position: fixed;
-    bottom: 0;
+    padding: 0.5rem; /* Reduce el relleno para que ocupe menos espacio */
+    position: relative; /* Evita que flote sobre el contenido */
+    bottom: 0; /* Se asegura de que esté al final del contenido */
     width: 100%;
+    height: auto; /* Ajusta automáticamente según el contenido */
 }
+
 
 /* Ajustes para dispositivos móviles */
 @media (max-width: 768px) {
@@ -282,6 +284,44 @@
         font-size: 12px; /* Ajusta el tamaño de la fuente */
     }
 }
+
+.forgot-password-button {
+    background: none;
+    border: none;
+    color: #007BFF;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+.forgot-password-button:hover {
+    color: #0056b3;
+}
+
+#forgotPasswordModal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    z-index: 1001;
+}
+
+#forgotPasswordModal input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
 
     </style>
 </head>
@@ -323,26 +363,38 @@
             <!-- Aquí aparecerán las publicaciones -->
         </div>
 
-        <!-- Ventana emergente para la contraseña y el nombre de usuario -->
         <div class="modal" id="passwordModal">
             <h2>Iniciar Sesión</h2>
             <button class="close-modal" onclick="closeLoginModal()">Cerrar</button>
             <input type="text" id="loginUsername" placeholder="Nombre de usuario">
             <input type="password" id="modalPassword" placeholder="Contraseña">
             <button onclick="verifyPassword()">Aceptar</button>
+            <!-- Botón "¿Olvidaste tu contraseña?" -->
+            <button class="forgot-password-button" onclick="openForgotPasswordModal()">¿Olvidaste tu contraseña?</button>
         </div>
-    </div>
+        
+        <!-- Nueva ventana emergente para cambiar la contraseña -->
+        <div class="modal" id="forgotPasswordModal" style="display: none;">
+            <h2>Recuperar Contraseña</h2>
+            <button class="close-modal" onclick="closeForgotPasswordModal()">Cerrar</button>
+            <input type="text" id="resetUsername" placeholder="Nombre de usuario registrado">
+            <input type="password" id="newPassword" placeholder="Nueva contraseña">
+            <button onclick="resetPassword()">Cambiar Contraseña</button>
+        </div>        
 
     <footer>
         <p>&copy; 2024 Proyecto de Desarrollo de proyectos computacionales. Todos los derechos reservados.</p>
     </footer>
 
     <script>
-        let currentUser = null;
-        let currentPassword = null;
-        let posts = JSON.parse(localStorage.getItem('posts')) || [];
-        let registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || {};
+        let currentUser = null; // Usuario actualmente registrado
+        let currentPassword = null; // Contraseña del usuario actual
+        let posts = JSON.parse(localStorage.getItem('posts')) || []; // Recupera publicaciones guardadas o inicia con un arreglo vacío
+        let registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || {}; // Usuarios registrados
         const inappropriateWords = ["mala", "palabra", "ofensiva", "puto", "madre", "chinga", "pendejo", "wey", "verga", "mierda", "fuck", "idiota", "morir", "mueras"]; // Lista de palabras ofensivas
+
+        // Registro de interacciones por sesión
+let sessionInteractions = {};
 
         function registerUser() {
             const usernameInput = document.getElementById('username').value;
@@ -393,6 +445,8 @@
             document.getElementById('passwordModal').style.display = 'none';
         }
 
+        renderPosts(); // Vuelve a renderizar las publicaciones después de iniciar sesión
+
         function closeLoginModal() {
             document.getElementById('passwordModal').style.display = 'none';
         }
@@ -403,33 +457,37 @@
         }
 
         function addPost() {
-            if (!currentUser) {
-                customAlert('Debes registrarte antes de publicar.');
-                return;
-            }
+    if (!currentUser) {
+        customAlert('Debes registrarte antes de publicar.');
+        return;
+    }
 
-            const content = document.getElementById('new-post-content').value;
-            if (content.trim() === '') {
-                customAlert('Por favor, escribe un mensaje antes de publicar.');
-                return;
-            }
+    const content = document.getElementById('new-post-content').value;
+    if (content.trim() === '') {
+        customAlert('Por favor, escribe un mensaje antes de publicar.');
+        return;
+    }
 
-            if (containsInappropriateLanguage(content)) {
-                customAlert('Tu mensaje contiene lenguaje inapropiado. Modifícalo antes de publicar.');
-                return;
-            }
+    if (containsInappropriateLanguage(content)) {
+        customAlert('Tu mensaje contiene lenguaje inapropiado. Modifícalo antes de publicar.');
+        return;
+    }
 
-            const newPost = {
-                username: currentUser,
-                content: content,
-                replies: []
-            };
+    const newPost = {
+        username: currentUser,
+        content: content,
+        replies: [],
+        likes: 0,
+        dislikes: 0
+    };
 
-            posts.push(newPost);
-            localStorage.setItem('posts', JSON.stringify(posts));
-            renderPosts();
-            document.getElementById('new-post-content').value = '';
-        }
+    // Agrega la nueva publicación al arreglo
+    posts.push(newPost); 
+    localStorage.setItem('posts', JSON.stringify(posts)); // Guarda en el Local Storage
+    renderPosts(); // Renderiza las publicaciones actualizadas
+    document.getElementById('new-post-content').value = ''; // Limpia el campo de texto
+}
+
 
         function customAlert(message, type = 'error') {
             const alertBox = document.createElement('div');
@@ -448,6 +506,38 @@
         function showLoginModal() {
             document.getElementById('passwordModal').style.display = 'block';
         }
+
+        // Abre la ventana emergente para recuperar la contraseña
+function openForgotPasswordModal() {
+    document.getElementById('forgotPasswordModal').style.display = 'block';
+}
+
+// Cierra la ventana emergente de recuperar contraseña
+function closeForgotPasswordModal() {
+    document.getElementById('forgotPasswordModal').style.display = 'none';
+}
+
+// Lógica para cambiar la contraseña
+function resetPassword() {
+    const resetUsername = document.getElementById('resetUsername').value.toLowerCase();
+    const newPassword = document.getElementById('newPassword').value;
+
+    if (!resetUsername || !newPassword) {
+        customAlert('Por favor, completa todos los campos.');
+        return;
+    }
+
+    if (!registeredUsers[resetUsername]) {
+        customAlert('El nombre de usuario no está registrado.');
+        return;
+    }
+
+    // Actualiza la contraseña en el registro de usuarios
+    registeredUsers[resetUsername].password = newPassword;
+    localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+    customAlert('Contraseña actualizada con éxito.', 'success');
+    closeForgotPasswordModal();
+}
 
         // Funcionalidad para cambiar entre modo oscuro y modo claro
         const modeToggle = document.getElementById('modeToggle');
@@ -469,46 +559,197 @@
         renderPosts();
 
         function renderPosts() {
-            const postsContainer = document.getElementById('posts');
-            postsContainer.innerHTML = '';
-            posts.forEach((post, index) => {
-                const postElement = document.createElement('div');
-                postElement.classList.add('post');
-                let buttonsHTML = '';
+    const postsContainer = document.getElementById('posts');
+    postsContainer.innerHTML = '';
 
-                if (post.username === currentUser) {
-                    buttonsHTML = `
-                        <button class="edit-button" onclick="editPost(${index})">Editar</button>
-                        <button class="delete-button" onclick="deletePost(${index})">Eliminar</button>
-                    `;
-                }
+    posts.forEach((post, index) => {
+        // Asegúrate de inicializar likes/dislikes si son null o undefined
+        post.likes = post.likes || 0;
+        post.dislikes = post.dislikes || 0;
 
-                const repliesHTML = post.replies.map((reply, replyIndex) => {
-                    let replyButtonsHTML = '';
-                    if (reply.username === currentUser) {
-                        replyButtonsHTML = `
-                            <button class="edit-button" onclick="editReply(${index}, ${replyIndex})">Editar</button>
-                            <button class="delete-button" onclick="deleteReply(${index}, ${replyIndex})">Eliminar</button>
-                        `;
-                    }
-                    return `
-                        <div class="reply">
-                            <strong>${reply.username}:</strong> ${reply.content}
-                            ${replyButtonsHTML}
-                        </div>
-                    `;
-                }).join('');
+        const postElement = document.createElement('div');
+        postElement.classList.add('post');
 
-                postElement.innerHTML = `
-                    <h3>${post.username}</h3>
-                    <p>${post.content}</p>
-                    ${buttonsHTML}
-                    <button class="reply-button" onclick="addReply(${index})">Responder</button>
-                    <div class="replies">${repliesHTML}</div>
-                `;
-                postsContainer.appendChild(postElement);
-            });
+        // Mostrar botones de edición y eliminación si el autor es el usuario actual
+        let buttonsHTML = '';
+        if (post.username === currentUser) {
+            buttonsHTML = `
+                <button class="edit-button" onclick="editPost(${index})">Editar</button>
+                <button class="delete-button" onclick="deletePost(${index})">Eliminar</button>
+            `;
         }
+
+        const repliesHTML = post.replies.map((reply, replyIndex) => {
+            reply.likes = reply.likes || 0;
+            reply.dislikes = reply.dislikes || 0;
+
+            let replyButtonsHTML = '';
+            if (reply.username === currentUser) {
+                replyButtonsHTML = `
+                    <button class="edit-button" onclick="editReply(${index}, ${replyIndex})">Editar</button>
+                    <button class="delete-button" onclick="deleteReply(${index}, ${replyIndex})">Eliminar</button>
+                `;
+            }
+            return `
+                <div class="reply">
+                    <strong>${reply.username}:</strong> ${reply.content}
+                    <div>
+                        <button onclick="likeReply(${index}, ${replyIndex})">👍 ${reply.likes}</button>
+                        <button onclick="dislikeReply(${index}, ${replyIndex})">👎 ${reply.dislikes}</button>
+                    </div>
+                    ${replyButtonsHTML}
+                </div>
+            `;
+        }).join('');
+
+        postElement.innerHTML = `
+            <h3>${post.username}</h3>
+            <p>${post.content}</p>
+            <div>
+                <button onclick="likePost(${index})">👍 ${post.likes}</button>
+                <button onclick="dislikePost(${index})">👎 ${post.dislikes}</button>
+            </div>
+            ${buttonsHTML}
+            <button class="reply-button" onclick="addReply(${index})">Responder</button>
+            <div class="replies">${repliesHTML}</div>
+        `;
+        postsContainer.appendChild(postElement);
+    });
+
+    localStorage.setItem('posts', JSON.stringify(posts)); // Actualiza el Local Storage
+}
+
+
+        function likePost(index) {
+    if (!currentUser) {
+        customAlert('Debes iniciar sesión para dar like o dislike.');
+        return;
+    }
+
+    const interactionKey = `post-${index}`;
+    
+    if (sessionInteractions[interactionKey] === 'like') {
+        customAlert('Ya diste like a esta publicación.');
+        return;
+    }
+
+    // Si ya dio dislike, se permite cambiar a like
+    if (sessionInteractions[interactionKey] === 'dislike') {
+        posts[index].dislikes--;
+        posts[index].likes++;
+        sessionInteractions[interactionKey] = 'like'; // Cambia el registro a like
+    } else {
+        posts[index].likes++;
+        sessionInteractions[interactionKey] = 'like'; // Registra el like
+    }
+
+    localStorage.setItem('posts', JSON.stringify(posts));
+    renderPosts();
+}
+
+function dislikePost(index) {
+    if (!currentUser) {
+        customAlert('Debes iniciar sesión para dar like o dislike.');
+        return;
+    }
+
+    const interactionKey = `post-${index}`;
+    
+    if (sessionInteractions[interactionKey] === 'dislike') {
+        customAlert('Ya diste dislike a esta publicación.');
+        return;
+    }
+
+    // Si ya dio like, se permite cambiar a dislike
+    if (sessionInteractions[interactionKey] === 'like') {
+        posts[index].likes--;
+        posts[index].dislikes++;
+        sessionInteractions[interactionKey] = 'dislike'; // Cambia el registro a dislike
+    } else {
+        posts[index].dislikes++;
+        sessionInteractions[interactionKey] = 'dislike'; // Registra el dislike
+    }
+
+    localStorage.setItem('posts', JSON.stringify(posts));
+    renderPosts();
+}
+
+function likeReply(postIndex, replyIndex) {
+    if (!currentUser) {
+        customAlert('Debes iniciar sesión para dar like o dislike.');
+        return;
+    }
+
+    const interactionKey = `reply-${postIndex}-${replyIndex}`;
+    const reply = posts[postIndex].replies[replyIndex];
+    
+    if (sessionInteractions[interactionKey] === 'like') {
+        customAlert('Ya diste like a esta respuesta.');
+        return;
+    }
+
+    // Si ya dio dislike, se permite cambiar a like
+    if (sessionInteractions[interactionKey] === 'dislike') {
+        reply.dislikes--;
+        reply.likes++;
+        sessionInteractions[interactionKey] = 'like'; // Cambia el registro a like
+    } else {
+        reply.likes++;
+        sessionInteractions[interactionKey] = 'like'; // Registra el like
+    }
+
+    localStorage.setItem('posts', JSON.stringify(posts));
+    renderPosts();
+}
+
+function dislikeReply(postIndex, replyIndex) {
+    if (!currentUser) {
+        customAlert('Debes iniciar sesión para dar like o dislike.');
+        return;
+    }
+
+    const interactionKey = `reply-${postIndex}-${replyIndex}`;
+    const reply = posts[postIndex].replies[replyIndex];
+    
+    if (sessionInteractions[interactionKey] === 'dislike') {
+        customAlert('Ya diste dislike a esta respuesta.');
+        return;
+    }
+
+    // Si ya dio like, se permite cambiar a dislike
+    if (sessionInteractions[interactionKey] === 'like') {
+        reply.likes--;
+        reply.dislikes++;
+        sessionInteractions[interactionKey] = 'dislike'; // Cambia el registro a dislike
+    } else {
+        reply.dislikes++;
+        sessionInteractions[interactionKey] = 'dislike'; // Registra el dislike
+    }
+
+    localStorage.setItem('posts', JSON.stringify(posts));
+    renderPosts();
+}
+
+// Función para dar dislike a una respuesta
+function dislikeReply(postIndex, replyIndex) {
+    if (!currentUser) {
+        customAlert('Debes iniciar sesión para dar like o dislike.');
+        return;
+    }
+
+    // Verificar si ya dio like/dislike en esta respuesta
+    const interactionKey = `reply-${postIndex}-${replyIndex}`;
+    if (sessionInteractions[interactionKey]) {
+        customAlert('Ya interactuaste con esta respuesta en esta sesión.');
+        return;
+    }
+
+    const reply = posts[postIndex].replies[replyIndex];
+    reply.dislikes = (reply.dislikes || 0) + 1; // Incrementa el contador de dislikes
+    sessionInteractions[interactionKey] = true; // Marca como interactuado
+    localStorage.setItem('posts', JSON.stringify(posts));
+    renderPosts();
+}
 
         function editPost(index) {
             if (posts[index].username !== currentUser) {
@@ -526,20 +767,21 @@
                 localStorage.setItem('posts', JSON.stringify(posts));
                 renderPosts();
             }
+
         }
 
         function deletePost(index) {
-            if (posts[index].username !== currentUser) {
-                customAlert('No puedes eliminar esta publicación.');
-                return;
-            }
+    if (posts[index].username !== currentUser) {
+        customAlert('No puedes eliminar esta publicación.');
+        return;
+    }
 
-            if (confirm('¿Estás seguro de que deseas eliminar esta publicación?')) {
-                posts.splice(index, 1);
-                localStorage.setItem('posts', JSON.stringify(posts));
-                renderPosts();
-            }
-        }
+    if (confirm('¿Estás seguro de que deseas eliminar esta publicación?')) {
+        posts.splice(index, 1); // Elimina la publicación del arreglo
+        localStorage.setItem('posts', JSON.stringify(posts)); // Actualiza el Local Storage
+        renderPosts(); // Vuelve a renderizar las publicaciones
+    }
+}
 
         function addReply(index) {
             if (!currentUser) {
@@ -594,6 +836,9 @@
                 renderPosts();
             }
         }
+
+        renderPosts();
+
     </script>
 </body>
 </html>
